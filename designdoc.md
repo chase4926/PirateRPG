@@ -1,7 +1,8 @@
 Pirate JRPG
-
 (JRPG = Final Fantasy style rpg)
 
+Core statement:
+This game is about developing your character as a pirate.
 
 #Gameplay Mechanics#
 Battles are a seperate screen.
@@ -51,5 +52,3 @@ Ship & player have 4 ability slots, 2 being for equipment, 2 being for personal 
 #Modding#
 Possible user generated terrain
 Terrain, enemies, weapons not hardcoded
-
-#Story#
