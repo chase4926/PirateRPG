@@ -4,6 +4,11 @@ Pirate JRPG
 Core statement:
 This game is about developing your character as a pirate.
 
+
+* auto-gen TOC:
+{:toc}
+
+
 #Gameplay Mechanics#
 Battles are a seperate screen.
 2 seperate game modes
