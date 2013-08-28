@@ -1,31 +1,40 @@
 <menu>
   <title>
-    <image>title.png</image>
+    <image>menu/title.png</image>
     <x>32</x>
-    <y>32</y>
+    <y>0</y>
   </title>
-  <new_game>
-    <x>920</x>
-    <y>50</y>
-    <image>new_game.png</image>
-    <image_hover>new_game_hover.png</image_hover>
-  </new_game>
-  <load_game>
-    <x>920</x>
-    <y>150</y>
-    <image>load_game.png</image>
-    <image_hover>load_game_hover.png</image_hover>
-  </load_game>
+  <main>
+    <new_game>
+      <x>920</x>
+      <y>50</y>
+      <image>menu/new_game.png</image>
+      <image_hover>menu/new_game_hover.png</image_hover>
+    </new_game>
+    <load_game>
+      <x>920</x>
+      <y>150</y>
+      <image>menu/load_game.png</image>
+      <image_hover>menu/load_game_hover.png</image_hover>
+    </load_game>
+    <options>
+      <x>920</x>
+      <y>250</y>
+      <image>menu/options.png</image>
+      <image_hover>menu/options_hover.png</image_hover>
+    </options>
+    <quit>
+      <x>920</x>
+      <y>350</y>
+      <image>menu/quit.png</image>
+      <image_hover>menu/quit_hover.png</image_hover>
+    </quit>
+  </main>
   <options>
-    <x>920</x>
-    <y>250</y>
-    <image>options.png</image>
-    <image_hover>options_hover.png</image_hover>
+    <background>
+      <image>menu/options_back.png</image>
+      <x>16</x>
+      <y>160</y>
+    </background>
   </options>
-  <quit>
-    <x>920</x>
-    <y>350</y>
-    <image>quit.png</image>
-    <image_hover>quit_hover.png</image_hover>
-  </quit>
 </menu>
