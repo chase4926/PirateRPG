@@ -14,7 +14,7 @@ This game is about developing your character as a pirate.
   No lighting
 
 # Title Screen #
-  New Game => Starts a new game, overwrites autosave
+  New Game => Starts a new game
   Load Game => Opens a menu with all saves, with autosave at the top
   Options => Resolution, fullscreen, sound slider
   Quit => Quits game
@@ -84,8 +84,7 @@ This game is about developing your character as a pirate.
   The player gains 1 skill point per 5 levels and no attribute points(5,10,15...)
   It is expected that after 'completing' the game the player will be level 80-100
   ## Healing ##
-	Character is healed over time as you walk around
-	Bandages are available to heal the player, one bandage can be used per minute
+    The character can buy and find bandages which are used for healing
   ## Skill Tree ##
     2 Branches(Combat, Naval)
     Combat branch relates to all things in exploration mode, naval for ship mode
@@ -105,8 +104,8 @@ This game is about developing your character as a pirate.
   Both modes have battle screen
   ## Formulas ##
     Armor is temporarily (while the attack happens) reduced by the armor pierce amount
-    Damage formula is (power * (weapondamage - armor))(probably going to change)
-      If there is a critical hit, the formula becomes (power * (weapondamage - armor) * 2)
+    Damage formula is ((power * (weapondamage - armor))) * ((100 - fatigue) * .01)        (probably going to change)
+      If there is a critical hit, the formula becomes ((power * (weapondamage - armor) * 2)) * ((100 - fatigue) * .01)
     ### Fire Damage ###
       Replace element with fire
       firedamage - fireresist = firestrength
@@ -123,6 +122,10 @@ This game is about developing your character as a pirate.
       Cancel => Returns to the previous menu / Exits out of the docking options
   ## Combat ##
     One move can be used per turn
+    If a skill would put the player over 100 fatigue, the skill cannot be used
+    10 fatigue lost per turn
+    Fatigue gained from using skills, the higher the fatigue the less the damage dealt
+      Fatigue goes from 1 - 100
   ## "Walking around" mode ##
     Pirate v. human battles
     ### Battles ###
@@ -147,6 +150,8 @@ This game is about developing your character as a pirate.
     Different trade hubs with different commodities
     Possible dynamic market
     Trading as a profession
+    All weapons are sold for half the original price
+    Commodity values are put into the island data folder
   ## Equipment ##
     Ship & player have two equipment slots,
     Each item equipped gives an ability
@@ -160,3 +165,29 @@ This game is about developing your character as a pirate.
   No overarching story
   Each island has an independent story, not important for game completion
   Some island's stories are minorly linked to each other
+
+
+
+
+
+Directory structure of an island:
+Folders are marked with {foldername}
+
+--UNFINISHED--
+{island name}
+  level.whatever - Contains the island level data
+  shop_prices.yml - YAML file containing shop prices for shops
+  npc.dialogue
+  events.yml
+  {sublevels}
+    {sublevelname}
+      level.whatever - Contains sublevel data
+      shop_prices.yml - Same as above
+      npc.dialogue
+      events.yml
+
+
+
+
+
+

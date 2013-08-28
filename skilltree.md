@@ -1,11 +1,13 @@
 For the purposes of the skill tree, 'x' refers to the current skill level and armor refers to the target's armor
+Each skill gives fatigue, shown in parenthesis after the skill name
+armor represents the opponent's armor, playerarmor represents the player's armor
 
 # Combat #
   ## Tier 1 ## (Unlocks at level 1)
-    ### Charge ###
-      Charges the enemy, having a (10x)% chance of stunning the enemy, preventing its next attack
-      and dealing ((power * x) - armor) damage
-    ### Bash ###
+    ### Charge (30) ###
+      Charges the enemy, having a (25)% chance of stunning the enemy, preventing its next attack
+      and dealing ((power * 2) - armor) damage
+    ### Bash (20) ###
       Bashes the enemy, attempting to overcome them with your armor. If your armor + (random range between -20% and 20% of armor) is greater than opponent's armor:
         Stuns the enemy
         Deals damage equal to the difference in armor values
@@ -13,8 +15,18 @@ For the purposes of the skill tree, 'x' refers to the current skill level and ar
       +5 to power attribute
   ## Tier 2 ## (Unlocks at level 20)
     ### Focused Will ###
-      +7 to all fire resistance
+      +15 to fire resistance
+    ### Cooldown (0) ###
+      Rests, reducing fatigue by 30
+    ### Rotato (45) ###
+      Spins around, slicing the enemy. Deals (damage * precision)/(armor) 
   ## Tier 3 ## (Unlocks at level 40)
+    ### Leap (25) ###
+      Leaps at the enemy, smashing them with your weight. Deals (power - armor) * playerarmor
+    ### Rampant Assault (85) ###
+      Rushes the enemy, giving no regard for your own safety. Deals ((damage * playerarmor * precision) * (3 * firedamage)) and recieves (damage * armor) in damage
+    ### Pirate's Focus (30) ###
+      Channels the will of the pirate, healing for 30% of your maximum health
 # Naval #
   ## Tier 1 ## (Unlocks at level 1)
   ## Tier 2 ## (Unlocks at level 20)
