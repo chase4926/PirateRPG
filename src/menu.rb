@@ -9,6 +9,7 @@ class Menu < ControllerObject
     @menu_xml = '../interface/menu.xml'
     @box_manager = BoundingBoxManager.new()
     register_buttons()
+    @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @current_boxes_under_mouse = Array.new()
   end
   
@@ -77,6 +78,20 @@ class Menu < ControllerObject
   def button_press_over_id(id, button_id)
     case button_id
       when Gosu::Button::MsLeft
+        case id
+          #when 'new_game'
+          #when 'load_game'
+          when 'options'
+            if @phase == 0 then
+              # if on main menu, open options menu
+              @phase = 2
+            else
+              # if on options menu, close it
+              @phase = 0
+            end
+          when 'quit'
+            @window.close()
+        end
     end
   end
   
