@@ -24,7 +24,6 @@ This game is about developing your character as a pirate.
 # Items #
   ## Special effects ##
     Movement speed increase
-    Chance to ..(Burn, freeze, shock)
     Health Regeneration
     Increase Attribute
   ## Attributes ##
@@ -33,8 +32,8 @@ This game is about developing your character as a pirate.
     Precision (Affects Crit. Chance)
     Armor (Damage resistance)
     Vitality (Affects max health)
-    ...Damage Bonus(Fire, Ice, Shock)
-    ...Armor Bonus(Fire, Ice, Shock)
+    Willpower (Fire resistance)
+    Fire damage bonus
   ## Player Items ##
     ### Weapons ###
       Attributes (Damage, Haste)
@@ -51,9 +50,8 @@ This game is about developing your character as a pirate.
       2 Weapon slots per ship, some weapon slots are bigger than others depending on ship
         ex. Large SkullCrusher requires a large slot
       #### Special Effects ####
-        Chance to ...(Burn, freeze, shock)
         Health Regeneration
-        ...Damage Bonus(Fire, Ice, Shock)
+        Fire damage bonus
         Attributes(Damage, Armor Pierce)
           Armor Pierce reduces armor
           Damage on boarding hooks does damage and also affects chance of successful 'hook'
@@ -64,7 +62,7 @@ This game is about developing your character as a pirate.
       #### Special effects ####
         Health regeneration
         Increase Attribute
-        ...Armor Bonus(Fire, Ice, Shock)
+        Willpower Bonus
 
 # Level design #
   No children
@@ -83,13 +81,12 @@ This game is about developing your character as a pirate.
 # Character #
   No max level
   The player does not start with skills
-  The player gains 1 skill point per level and no attribute points
+  The player gains 1 skill point per 5 levels and no attribute points(5,10,15...)
   It is expected that after 'completing' the game the player will be level 80-100
   ## Skill Tree ##
     2 Branches(Combat, Naval)
     Combat branch relates to all things in exploration mode, naval for ship mode
     If all skills have been 'maxed out' skill points can be put into any of the attributes (Power, Precision, Armor, Vitality)
-    To be able to put skill points in the next tier, there must be 10 points in the previous tier
   ## Inventory ##
     3 Tiers of bags
     Each tier has a certain amount of slots (8, 16, 24)
@@ -107,6 +104,13 @@ This game is about developing your character as a pirate.
     Armor is temporarily (while the attack happens) reduced by the armor pierce amount
     Damage formula is (power * (weapondamage - armor))(probably going to change)
       If there is a critical hit, the formula becomes (power * (weapondamage - armor) * 2)
+    ### Fire Damage ###
+      Replace element with fire
+      firedamage - fireresist = firestrength
+      Fire Strength affects the effect of fire damage
+       For the purposes of this, fire damage is represented by 'x'
+        If fire damage is lower than 1, no fire effect occurs
+        Fire damage does (x - enemylevel) damage per turn
   ## Dock ##
     ### Dock Menu ###
       To open the menu you talking to a sailor NPC

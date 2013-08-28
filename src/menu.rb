@@ -41,7 +41,9 @@ class Menu < ControllerObject
   
   def draw()
     #Title
-    Media::get_image(XML_Manager['../interface/menu.xml']['title']['image']).draw(XML_Manager['../interface/menu.xml']['title']['x'].to_i(), XML_Manager['../interface/menu.xml']['title']['y'].to_i(), 0)
+    Media::get_image(XML_Manager['../interface/menu.xml']['title']['image']).draw(XML_Manager['../interface/menu.xml']['title']['x'].to_i(), XML_Manager['../interface/menu.xml']['title']['y'].to_i(), 1)
+    #Background
+    draw_square(@window, 0, 0, 0, 1280, 720, 0xff0000ff)
     #New game button
     box = @box_manager['new_game']
     if @current_boxes_under_mouse.include?('new_game') then

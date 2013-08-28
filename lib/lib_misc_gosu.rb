@@ -9,8 +9,8 @@ module WindowSettings
   @@window = nil
   @@scale_x = 0
   @@scale_y = 0
-  @@x_offset = 0
-  @@y_offset = 0
+  @@default_width = 0
+  @@default_height = 0
   
   def self.get_scale_x()
     return @@scale_x
@@ -20,36 +20,26 @@ module WindowSettings
     return @@scale_y
   end
   
-  def self.get_x_offset()
-    return @@x_offset
-  end
-  
-  def self.get_y_offset()
-    return @@y_offset
-  end
-  
   def self.get_relative_x(x)
-    return (x - @@x_offset) / @@scale_x
+    return x / @@scale_x
   end
   
   def self.get_relative_y(y)
-    return (y - @@y_offset) / @@scale_y
+    return y / @@scale_y
   end
   
   def self.initialize(window, width, height, default_width, default_height)
     @@window = window
+    @@default_width = default_width
+    @@default_height = default_height
     @@scale_x = width / default_width.to_f()
     @@scale_y = height / default_height.to_f()
-    @@x_offset = (width - (@@scale_x * default_width)) / 2
-    @@y_offset = (height - (@@scale_y * default_height)) / 2
   end
   
   def self.formatted_draw(&block)
-    @@window.translate(@@x_offset, @@y_offset) do
-      @@window.scale(@@scale_x, @@scale_y) do
-        @@window.clip_to(0, 0, 640, 640) do
-          block.call()
-        end
+    @@window.scale(@@scale_x, @@scale_y) do
+      @@window.clip_to(0, 0, @@default_width, @@default_height) do
+        block.call()
       end
     end
   end

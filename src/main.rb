@@ -32,7 +32,6 @@ $VERBOSE = true
 srand()
 
 
-
 window = GameWindow.new(:window_width => 1280, :window_height => 720, :width => 1280, :height => 720, :fullscreen => false, :caption => 'PirateRPG').show()
 
 
