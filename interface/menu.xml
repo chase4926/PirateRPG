@@ -1,26 +1,26 @@
 <menu>
   <title>Pirate RPG</title>
   <new_game>
-    <x>100</x>
+    <x>900</x>
     <y>50</y>
     <image>new_game.png</image>
     <image_hover>new_game_hover.png</image_hover>
   </new_game>
   <load_game>
-    <x>0</x>
-    <y>0</y>
+    <x>900</x>
+    <y>200</y>
     <image>load_game.png</image>
     <image_hover>load_game_hover.png</image_hover>
   </load_game>
   <options>
-    <x>0</x>
-    <y>0</y>
+    <x>900</x>
+    <y>350</y>
     <image>options.png</image>
     <image_hover>options_hover.png</image_hover>
   </options>
   <quit>
-    <x>0</x>
-    <y>0</y>
+    <x>900</x>
+    <y>500</y>
     <image>quit.png</image>
     <image_hover>quit_hover.png</image_hover>
   </quit>

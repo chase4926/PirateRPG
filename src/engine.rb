@@ -96,9 +96,9 @@ class GameWindow < Gosu::Window
   end # End GameWindow Update
   
   def draw()
-    WindowSettings::formatted_draw() do
+    #WindowSettings::formatted_draw() do
       @controller.draw()
-    end
+    #end
   end # End GameWindow Draw
   
   def button_down(id)
