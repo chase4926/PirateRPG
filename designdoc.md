@@ -83,6 +83,9 @@ This game is about developing your character as a pirate.
   The player does not start with skills
   The player gains 1 skill point per 5 levels and no attribute points(5,10,15...)
   It is expected that after 'completing' the game the player will be level 80-100
+  ## Healing ##
+	Character is healed over time as you walk around
+	Bandages are available to heal the player, one bandage can be used per minute
   ## Skill Tree ##
     2 Branches(Combat, Naval)
     Combat branch relates to all things in exploration mode, naval for ship mode
