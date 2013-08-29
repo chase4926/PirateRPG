@@ -126,6 +126,17 @@ This game is about developing your character as a pirate.
     10 fatigue lost per turn
     Fatigue gained from using skills, the higher the fatigue the less the damage dealt
       Fatigue goes from 1 - 100
+    ### GUI Layout ###
+      4 Attacks on bottom right of screen
+        Top 2 attacks are left and right equipped weapon
+        Bottom 2 attacks are skills
+      Middle bottom of the screen shows player health and fatigue above enemy health
+      Player health bar is to the right of the player name with fatigue bar below that
+      Enemy health bar is below fatigue bar with the enemy name to the left, below the player name
+      "Curret Value / Maximum Value" are displayed in the middle of the health / fatigue bars
+      Enemy sprite is on the left side of the screen
+      Player sprite is to the right of the screen
+      Bottom left of the screen shows a description of the currently selected skill
   ## "Walking around" mode ##
     Pirate v. human battles
     ### Battles ###
@@ -150,8 +161,8 @@ This game is about developing your character as a pirate.
     Different trade hubs with different commodities
     Possible dynamic market
     Trading as a profession
-    All weapons are sold for half the original price
-    Commodity values are put into the island data folder
+    Shopkeepers have a global price modifier, it modifies the price of all the items that are not specifically modified (Adds mod support)
+	Shopkeepers have price modifiers on specific items, allowing different islands to have different priced items/commodities
   ## Equipment ##
     Ship & player have two equipment slots,
     Each item equipped gives an ability

@@ -29,5 +29,23 @@ armor represents the opponent's armor, playerarmor represents the player's armor
       Channels the will of the pirate, healing for 30% of your maximum health
 # Naval #
   ## Tier 1 ## (Unlocks at level 1)
+    ### Repair (10) ###
+      The crew repairs the ship, healing it for 35% of its maximum health
+    ### Ram (25) ###
+      Rams the enemy ship, dealing (speed * 3) damage
+    ### Heavy Plating ###
+      Increases ship armor by 10
   ## Tier 2 ## (Unlocks at level 20)
+    ### Relaxation (0) ###
+      Rests, reducing fatigue by 30
+    ### Construction Specialization ###
+      Increases armor and speed of ships by 15%
+    ### Catapult (30) ###
+      Launches an armor-shattering boulder completely piercing armor and dealing (power / 2) damage
   ## Tier 3 ## (Unlocks at level 40)
+    ### Triage (30) ###
+      Dedicates all resources to defense, completely recharging health and fatigue, but at the expense of losing 50% of current armor and power, and 100% of current speed
+    ### Advanced Sailing ###
+      Advanced sail design allows for a 30% increase in ship speed
+    ### Reckless Charge (70) ###
+      Slams into the enemy, attempting to go right through them. Deals (power * playerarmor * speed) damage and recieving armor damage
