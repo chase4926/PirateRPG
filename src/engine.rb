@@ -66,9 +66,27 @@ module XML_Manager
   @@xml_hash = {}
   def self.[](filename)
     if not @@xml_hash[filename] then
-      @@xml_hash[filename] = XmlSimple.xml_in(filename, { 'KeyAttr' => 'name', 'ForceArray' => false })
+      File.open(filename, 'r') do |file|
+        @@xml_hash[filename] = Nokogiri::XML(file)
+      end
     end
     return @@xml_hash[filename]
+  end
+end
+
+
+module Font_Manager
+  @@font_hash = {}
+  @@window = nil
+  def self.initialize(window)
+    @@window = window
+  end
+  
+  def self.[](font, size)
+    if not @@font_hash["#{font},#{size}"] then
+      @@font_hash["#{font},#{size}"] = Gosu::Font.new(@@window, font, size)
+    end
+    return @@font_hash["#{font},#{size}"]
   end
 end
 
@@ -83,10 +101,14 @@ class GameWindow < Gosu::Window
     Media::initialize(self, '../content/images', '../content/sounds', '../content/tilesets')
     Alphabet::initialize(self)
     WindowSettings::initialize(self, params[:window_width], params[:window_height], params[:width], params[:height])
+    Font_Manager::initialize(self)
     @relative_mouse_x = 0
     @relative_mouse_y = 0
+    @window_width = params[:window_width]
+    @window_height = params[:window_height]
     @controller = Controller.new(self)
     @show_cursor = params[:show_cursor] == nil ? true : params[:show_cursor]
+    @show_fps = params[:show_fps] == nil ? false : params[:show_fps]
   end # End GameWindow Initialize
   
   def update()
@@ -97,6 +119,9 @@ class GameWindow < Gosu::Window
   
   def draw()
     WindowSettings::formatted_draw() do
+      if @show_fps then
+        Alphabet::draw_text(Gosu::fps.to_s(), @window_width - 36, 0, 10, 3)
+      end
       @controller.draw()
     end
   end # End GameWindow Draw

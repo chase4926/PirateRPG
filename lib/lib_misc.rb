@@ -98,39 +98,6 @@ end
 
 
 #
-# Returns a 2d array full of ' ' elements
-#
-def create_2d_array(width, height)
-  return Array.new(height){Array.new(width){' '}}
-end
-
-
-#
-# Returns a 3d array full of ' ' elements
-#
-def create_3d_array(width, height, depth)
-  return Array.new(depth){create_2d_array(width, height)}
-end
-
-
-#
-# Returns a random number between min and max
-#
-def random(min, max, seed=nil)
-  srand(seed) if seed
-  return (min..max).to_a().sample()
-end
-
-
-#
-# Returns a random floating point integer between min and max
-#
-def randomfloat(min, max, seed=nil) # Why do I need this?
-  return random(min, max, seed) / 10.0
-end
-
-
-#
 # Returns the contents of an entire file read into a string
 #
 def file_read(file)
