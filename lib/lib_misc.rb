@@ -21,15 +21,6 @@ module EveryModule
 end
 
 
-def inverse_bool(bool)
-  if bool then
-    return false
-  else
-    return true
-  end
-end
-
-
 def remove_trailing_nils(array)
   array.reverse!()
   while array[0] == nil do

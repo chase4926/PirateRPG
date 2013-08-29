@@ -62,31 +62,44 @@ class Controller
 end
 
 
-module XML_Manager
-  @@xml_hash = {}
-  def self.[](filename)
-    if not @@xml_hash[filename] then
-      File.open(filename, 'r') do |file|
-        @@xml_hash[filename] = Nokogiri::XML(file)
-      end
-    end
-    return @@xml_hash[filename]
-  end
-end
-
-
-module Font_Manager
-  @@font_hash = {}
-  @@window = nil
+module Res
   def self.initialize(window)
-    @@window = window
+    self::Font.initialize(window)
   end
   
-  def self.[](font, size)
-    if not @@font_hash["#{font},#{size}"] then
-      @@font_hash["#{font},#{size}"] = Gosu::Font.new(@@window, font, size)
+  module XML
+    @@xml_hash = {}
+    def self.[](filename)
+      if not @@xml_hash[filename] then
+        File.open(filename, 'r') do |file|
+          @@xml_hash[filename] = Nokogiri::XML(file)
+        end
+      end
+      return @@xml_hash[filename]
     end
-    return @@font_hash["#{font},#{size}"]
+    
+    def self.text(filename, xpath)
+      return self[filename].xpath(xpath).text()
+    end
+    
+    def self.int(filename, xpath)
+      return self[filename].xpath(xpath).text().to_i()
+    end
+  end
+  
+  module Font
+    @@font_hash = {}
+    @@window = nil
+    def self.initialize(window)
+      @@window = window
+    end
+    
+    def self.[](font, size)
+      if not @@font_hash["#{font},#{size}"] then
+        @@font_hash["#{font},#{size}"] = Gosu::Font.new(@@window, font, size)
+      end
+      return @@font_hash["#{font},#{size}"]
+    end
   end
 end
 
@@ -101,7 +114,7 @@ class GameWindow < Gosu::Window
     Media::initialize(self, '../content/images', '../content/sounds', '../content/tilesets')
     Alphabet::initialize(self)
     WindowSettings::initialize(self, params[:window_width], params[:window_height], params[:width], params[:height])
-    Font_Manager::initialize(self)
+    Res.initialize(self)
     @relative_mouse_x = 0
     @relative_mouse_y = 0
     @window_width = params[:window_width]

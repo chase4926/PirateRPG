@@ -31,10 +31,21 @@
     </quit>
   </main>
   <options>
+    <font>
+      <name>Batang</name>
+      <size>48</size>
+    </font>
     <background>
       <image>menu/options_back.png</image>
       <x>16</x>
       <y>160</y>
     </background>
+    <volume>
+      <text>
+        <text>Volume</text>
+        <x>32</x>
+        <y>160</y>
+      </text>
+    </volume>
   </options>
 </menu>
