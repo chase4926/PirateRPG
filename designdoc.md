@@ -133,7 +133,7 @@ This game is about developing your character as a pirate.
       Middle bottom of the screen shows player health and fatigue above enemy health
       Player health bar is to the right of the player name with fatigue bar below that
       Enemy health bar is below fatigue bar with the enemy name to the left, below the player name
-      "Curret Value / Maximum Value" are displayed in the middle of the health / fatigue bars
+      "Current Value / Maximum Value" are displayed in the middle of the health / fatigue bars
       Enemy sprite is on the left side of the screen
       Player sprite is to the right of the screen
       Bottom left of the screen shows a description of the currently selected skill
