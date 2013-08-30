@@ -167,6 +167,7 @@ class Menu < ControllerObject
     #Click
     if @list_tick > 0 then
       @list_tick += 1
+      draw_square(@window, 639, 0, 2, 2, -300 + (@list_tick < 460 ? @list_tick : 460), 0xff000000)
       Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 3)
       if @list_tick > 516 then
         every(30) do
