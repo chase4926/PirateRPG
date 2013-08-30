@@ -16,7 +16,7 @@ class Menu < ControllerObject
     update_resolution_index()
     @list = [Gosu::Button::KbUp, Gosu::Button::KbUp, Gosu::Button::KbDown, Gosu::Button::KbDown,
              Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
-             Gosu::Button::KbA, Gosu::Button::KbB, Gosu::Button::KbReturn]
+             Gosu::Button::KbB, Gosu::Button::KbA, Gosu::Button::KbReturn]
     @list_index = 0
     @click = Media::get_sound('samples/click.ogg')
     @list_tick = 0
