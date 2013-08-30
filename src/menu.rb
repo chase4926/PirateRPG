@@ -18,7 +18,7 @@ class Menu < ControllerObject
              Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
              Gosu::Button::KbB, Gosu::Button::KbA, Gosu::Button::KbReturn]
     @list_index = 0
-    @click = Media::get_sound('samples/click.ogg')
+    @click = Media::get_sound('songs/click.ogg')
     @list_tick = 0
     @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
   end
@@ -235,7 +235,7 @@ class Menu < ControllerObject
     
     if id == @list[@list_index] then
       if @list_index == (@list.count() - 1) then
-        @click.play(Res::Vars['volume'] / 100.0)
+        @click.play()
         @list_tick = 1
       else
         @list_index += 1
