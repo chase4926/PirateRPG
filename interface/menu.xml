@@ -53,7 +53,7 @@
     </quit>
   </main>
   <options>
-    <font>
+    <font><!--This doesn't work on linux, it just appears as the system default font-->
       <name>Batang</name>
       <size>46</size>
     </font>
@@ -100,6 +100,27 @@
         <y>384</y>
       </right_arrow>
     </resolution>
+    <fullscreen>
+      <title>
+        <text>Fullscreen</text>
+        <x>48</x>
+        <y>448</y>
+      </title>
+      <text>
+        <x>82</x>
+        <y>508</y>
+      </text>
+      <left_arrow>
+        <image>menu/left_arrow.png</image>
+        <x>32</x>
+        <y>520</y>
+      </left_arrow>
+      <right_arrow>
+        <image>menu/right_arrow.png</image>
+        <x>182</x>
+        <y>520</y>
+      </right_arrow>
+    </fullscreen>
     <apply>
       <image>menu/apply.png</image>
       <image_hover>menu/apply_hover.png</image_hover>
