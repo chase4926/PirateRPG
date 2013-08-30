@@ -1,5 +1,5 @@
-Pirate JRPG
-(JRPG = Final Fantasy style rpg)
+Vortex Voyager
+(Final Fantasy style rpg with pirates. YAAARRR!!!)
 
 Core statement:
 This game is about developing your character as a pirate.
@@ -22,6 +22,10 @@ This game is about developing your character as a pirate.
   Speed attribute affects ship movement on overworld, and affects the chance to get away
   Smaller ships have a higher speed attribute, ship gear can also affect this
 # Items #
+  ## Requirements to use ##
+    Player level requirement
+    Attribute requirement
+    Slot size requirement (in the case of ships)
   ## Special effects ##
     Movement speed increase
     Health Regeneration
@@ -80,6 +84,7 @@ This game is about developing your character as a pirate.
 
 # Character #
   No max level
+  1 attribute point is gained per level along with points being automatically allocated to attributes
   The player does not start with skills
   The player gains 1 skill point per 5 levels and no attribute points(5,10,15...)
   It is expected that after 'completing' the game the player will be level 80-100
@@ -103,11 +108,12 @@ This game is about developing your character as a pirate.
   2 seperate game modes
   Both modes have battle screen
   ## Formulas ##
+    EXP required for level up where 'x' is level = 1/(((x^2)/(.00002x^3)) + 500) * 30000000
     Armor is temporarily (while the attack happens) reduced by the armor pierce amount
     Damage formula is ((power * (weapondamage - armor))) * ((100 - fatigue) * .01)        (probably going to change)
       If there is a critical hit, the formula becomes ((power * (weapondamage - armor) * 2)) * ((100 - fatigue) * .01)
+    Critical chance is (precision / (enemylevel * 5))
     ### Fire Damage ###
-      Replace element with fire
       firedamage - fireresist = firestrength
       Fire Strength affects the effect of fire damage
        For the purposes of this, fire damage is represented by 'x'
@@ -126,8 +132,10 @@ This game is about developing your character as a pirate.
     10 fatigue lost per turn
     Fatigue gained from using skills, the higher the fatigue the less the damage dealt
       Fatigue goes from 1 - 100
-    ### GUI Layout ###
-      4 Attacks on bottom right of screen
+    Damage done will be shown above the victim's head after attack animation is complete
+    Gold is given as a reward for victory
+    ### GUI Layout - Regular Combat ###
+      4 attacks on bottom right of screen
         Top 2 attacks are left and right equipped weapon
         Bottom 2 attacks are skills
       Middle bottom of the screen shows player health and fatigue above enemy health
@@ -139,6 +147,14 @@ This game is about developing your character as a pirate.
       Bottom left of the screen shows a description of the currently selected skill
   ## "Walking around" mode ##
     Pirate v. human battles
+  ## Dialogue ##
+    NPC's dialogue is dependant on amount of times the NPC has been talked to, player level
+    ### GUI Layout ###
+      A bar at the bottom of the screen shows health and buttons to enter menus
+        Inventory  => Opens a window showing the inventory
+        Options => Opens a menu showing the options
+        Character => Opens a window showing character information (attributes, current equipement)
+        Skills => Opens a window showing the skill tree
     ### Battles ###
       Sword and gun combat mechanics different
   ## "Driving the ship" mode ##
@@ -196,9 +212,3 @@ Folders are marked with {foldername}
       shop_prices.yml - Same as above
       npc.dialogue
       events.yml
-
-
-
-
-
-
