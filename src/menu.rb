@@ -12,8 +12,8 @@ class Menu < ControllerObject
     register_buttons()
     @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @current_boxes_under_mouse = Array.new()
-    @resolution_index = 0
     @resolutions = get_resolution_list()
+    @resolution_index = @resolutions.index(Res::Vars['resolution'])
   end
   
   def update()
@@ -62,6 +62,11 @@ class Menu < ControllerObject
                                 Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')),
                                 'apply')
     @box_manager['apply'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image_hover'))
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//options/defaults/x'),
+                                Res::XML.int(@menu_xml, '//options/defaults/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//options/defaults/image')),
+                                'defaults')
+    @box_manager['defaults'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/defaults/image_hover'))
   end
   
   def draw()
@@ -112,6 +117,15 @@ class Menu < ControllerObject
       else
         box.image.draw(box.x, box.y, 1)
       end
+      # Defaults button
+      box = @box_manager['defaults']
+      if @current_boxes_under_mouse.include?('defaults') then
+        box.extra.draw(box.x, box.y, 1)
+      else
+        box.image.draw(box.x, box.y, 1)
+      end
+      # Resolution changer
+      @options_font.draw("#{@resolutions[@resolution_index][0]}x#{@resolutions[@resolution_index][1]}", Res::XML.int(@menu_xml, '//resolution/text/x'), Res::XML.int(@menu_xml, '//resolution/text/y'), 2)
     end
   end
   
@@ -140,6 +154,10 @@ class Menu < ControllerObject
                 @window.close()
               when 'apply'
                 #Save config changes
+                Res::Vars.save()
+              when 'defaults'
+                #Reset config to defaults
+                Res::Vars.defaults()
                 Res::Vars.save()
             end
         end

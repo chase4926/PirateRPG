@@ -79,11 +79,23 @@
         <y>238</y>
       </percentage>
     </volume>
+    <resolution>
+      <text>
+        <x>48</x>
+        <y>320</y>
+      </text>
+    </resolution>
     <apply>
       <image>menu/apply.png</image>
       <image_hover>menu/apply_hover.png</image_hover>
       <x>688</x>
       <y>584</y>
     </apply>
+    <defaults>
+      <image>menu/defaults.png</image>
+      <image_hover>menu/defaults_hover.png</image_hover>
+      <x>432</x>
+      <y>584</y>
+    </defaults>
   </options>
 </menu>

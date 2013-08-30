@@ -85,7 +85,7 @@ module Res
     end
     
     def self.defaults()
-      @@variables_hash = {'volume' => 50, 'resolution' => [1280, 720]}
+      @@variable_hash = {'volume' => 50, 'resolution' => [1280, 720]}
     end
     
     def self.[](var_name)
