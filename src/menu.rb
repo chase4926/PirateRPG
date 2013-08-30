@@ -117,7 +117,7 @@ class Menu < ControllerObject
     # Background
     20.times() do |x|
       12.times() do |y|
-        Media::get_image('ocean.png').draw(x*64, y*64, 1)
+        Media::get_graphic('64x64/ocean.png')[(Gosu::milliseconds / 75) % Media::get_graphic('64x64/ocean.png').size].draw(x*64, y*64, 1)
       end
     end
     # Title
