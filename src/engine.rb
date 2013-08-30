@@ -63,8 +63,34 @@ end
 
 
 module Res
-  def self.initialize(window)
+  def self.initialize(window, variables_filename)
     self::Font.initialize(window)
+    self::Vars.load(variables_filename)
+  end
+  
+  module Vars
+    @@variable_hash = {}
+    @@filename = ''
+    def self.load(filename)
+      @@filename = filename
+      File.open(filename, 'r') do |file|
+        @@variable_hash = YAML::load(file.read())
+      end
+    end
+    
+    def self.save(filename=@@filename)
+      File.open(filename, 'w+') do |file|
+        file.print(@@variable_hash.to_yaml())
+      end
+    end
+    
+    def self.[](var_name)
+      return @@variable_hash[var_name]
+    end
+    
+    def self.[]=(var_name, variable)
+      @@variable_hash[var_name] = variable
+    end
   end
   
   module XML
@@ -114,7 +140,7 @@ class GameWindow < Gosu::Window
     Media::initialize(self, '../content/images', '../content/sounds', '../content/tilesets')
     Alphabet::initialize(self)
     WindowSettings::initialize(self, params[:window_width], params[:window_height], params[:width], params[:height])
-    Res.initialize(self)
+    Res.initialize(self, '../config.yml')
     @relative_mouse_x = 0
     @relative_mouse_y = 0
     @window_width = params[:window_width]

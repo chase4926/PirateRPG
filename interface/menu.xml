@@ -33,7 +33,7 @@
   <options>
     <font>
       <name>Batang</name>
-      <size>48</size>
+      <size>46</size>
     </font>
     <background>
       <image>menu/options_back.png</image>
@@ -43,9 +43,25 @@
     <volume>
       <text>
         <text>Volume</text>
-        <x>32</x>
-        <y>160</y>
+        <x>48</x>
+        <y>180</y>
       </text>
+      <slider>
+        <background>menu/volume.png</background>
+        <image>menu/slider.png</image>
+        <x>48</x>
+        <y>244</y>
+      </slider>
+      <percentage>
+        <x>312</x>
+        <y>238</y>
+      </percentage>
     </volume>
+    <apply>
+      <image>menu/apply.png</image>
+      <image_hover>menu/apply_hover.png</image_hover>
+      <x>688</x>
+      <y>584</y>
+    </apply>
   </options>
 </menu>

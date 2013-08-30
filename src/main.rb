@@ -12,6 +12,7 @@ $:.unshift(File.expand_path('../lib'))
 # System libraries ---
 require 'gosu'
 require 'nokogiri'
+require 'yaml'
 
 # Local libraries ---
 require 'lib.rb'
