@@ -12,6 +12,8 @@ class Menu < ControllerObject
     register_buttons()
     @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @current_boxes_under_mouse = Array.new()
+    @resolution_index = 0
+    @resolutions = get_resolution_list()
   end
   
   def update()
@@ -22,37 +24,44 @@ class Menu < ControllerObject
     end
   end
   
+  def get_resolution_list()
+    result = Array.new()
+    Res::XML[@menu_xml].xpath('//resolution').each() do |res|
+      result << [res.xpath('./width').text().to_i(), res.xpath('./height').text().to_i()]
+    end
+    return result
+  end
+  
   def register_buttons()
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//main/new_game/x'),
-                              Res::XML.int(@menu_xml, '//main/new_game/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')).height(),
-                              'new_game')
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//main/load_game/x'),
-                              Res::XML.int(@menu_xml, '//main/load_game/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')).height(),
-                              'load_game')
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//main/options/x'),
-                              Res::XML.int(@menu_xml, '//main/options/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')).height(),
-                              'options')
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//main/quit/x'),
-                              Res::XML.int(@menu_xml, '//main/quit/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')).height(),
-                              'quit')
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//volume/slider/x'),
-                              Res::XML.int(@menu_xml, '//volume/slider/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')).height(),
-                              'volume')
-    @box_manager.register_box(Res::XML.int(@menu_xml, '//options/apply/x'),
-                              Res::XML.int(@menu_xml, '//options/apply/y'),
-                              Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')).width(),
-                              Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')).height(),
-                              'apply')
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/new_game/x'),
+                                Res::XML.int(@menu_xml, '//main/new_game/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')),
+                                'new_game')
+    @box_manager['new_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image_hover'))
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/load_game/x'),
+                                Res::XML.int(@menu_xml, '//main/load_game/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')),
+                                'load_game')
+    @box_manager['load_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image_hover'))
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/options/x'),
+                                Res::XML.int(@menu_xml, '//main/options/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')),
+                                'options')
+    @box_manager['options'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/options/image_hover'))
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/quit/x'),
+                                Res::XML.int(@menu_xml, '//main/quit/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')),
+                                'quit')
+    @box_manager['quit'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image_hover'))
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//volume/slider/x'),
+                                Res::XML.int(@menu_xml, '//volume/slider/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')),
+                                'volume')
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//options/apply/x'),
+                                Res::XML.int(@menu_xml, '//options/apply/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')),
+                                'apply')
+    @box_manager['apply'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image_hover'))
   end
   
   def draw()
@@ -63,45 +72,45 @@ class Menu < ControllerObject
     # New game button
     box = @box_manager['new_game']
     if @current_boxes_under_mouse.include?('new_game') then
-      Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image_hover')).draw(box.x, box.y, 1)
+      box.extra.draw(box.x, box.y, 1)
     else
-      Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')).draw(box.x, box.y, 1)
+      box.image.draw(box.x, box.y, 1)
     end
     # Load game button
     box = @box_manager['load_game']
     if @current_boxes_under_mouse.include?('load_game') then
-      Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image_hover')).draw(box.x, box.y, 1)
+      box.extra.draw(box.x, box.y, 1)
     else
-      Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')).draw(box.x, box.y, 1)
+      box.image.draw(box.x, box.y, 1)
     end
     # Options button
     box = @box_manager['options']
     if @current_boxes_under_mouse.include?('options') then
-      Media::get_image(Res::XML.text(@menu_xml, '//main/options/image_hover')).draw(box.x, box.y, 1)
+      box.extra.draw(box.x, box.y, 1)
     else
-      Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')).draw(box.x, box.y, 1)
+      box.image.draw(box.x, box.y, 1)
     end
     # Quit button
     box = @box_manager['quit']
     if @current_boxes_under_mouse.include?('quit') then
-      Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image_hover')).draw(box.x, box.y, 1)
+      box.extra.draw(box.x, box.y, 1)
     else
-      Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')).draw(box.x, box.y, 1)
+      box.image.draw(box.x, box.y, 1)
     end
     if @phase == 2 then
       # Options background
       Media::get_image(Res::XML.text(@menu_xml, '//options/background/image')).draw(Res::XML.int(@menu_xml, '//options/background/x'), Res::XML.int(@menu_xml, '//options/background/y'), 1)
       # Sound slider
       @options_font.draw(Res::XML.text(@menu_xml, '//volume/text/text'), Res::XML.int(@menu_xml, '//volume/text/x'), Res::XML.int(@menu_xml, '//volume/text/y'), 2)
-      Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')).draw(Res::XML.int(@menu_xml, '//volume/slider/x'), Res::XML.int(@menu_xml, '//volume/slider/y'), 2)
+      @box_manager['volume'].image.draw(@box_manager['volume'].x, @box_manager['volume'].y, 2)
       @options_font.draw("#{Res::Vars['volume']}%", Res::XML.int(@menu_xml, '//volume/percentage/x'), Res::XML.int(@menu_xml, '//volume/percentage/y'), 2)
       Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).draw(((Res::Vars['volume'] / 100.0) * 240) + Res::XML.int(@menu_xml, '//volume/slider/x') - (Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).width() / 2), Res::XML.int(@menu_xml, '//volume/slider/y') + (Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).height() / 2), 3)
       # Apply button
       box = @box_manager['apply']
       if @current_boxes_under_mouse.include?('apply') then
-        Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image_hover')).draw(box.x, box.y, 1)
+        box.extra.draw(box.x, box.y, 1)
       else
-        Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')).draw(box.x, box.y, 1)
+        box.image.draw(box.x, box.y, 1)
       end
     end
   end

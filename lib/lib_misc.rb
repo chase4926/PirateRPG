@@ -296,13 +296,15 @@ end
 
 
 class BoundingBox
-  attr_accessor :x, :y, :width, :height
+  attr_accessor :x, :y, :width, :height, :image, :extra
   
-  def initialize(x, y, width, height)
+  def initialize(x, y, width, height, image = nil)
     @x = x
     @y = y
     @width = width
     @height = height
+    @image = image
+    @extra = nil # Extra variable when a situation requires it
   end
   
   def hit_test(x, y, width=1, height=1)

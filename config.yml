@@ -1,2 +1,5 @@
 ---
-volume: 100
+volume: 50
+resolution:
+- 1280
+- 720

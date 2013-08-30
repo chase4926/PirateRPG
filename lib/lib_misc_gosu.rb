@@ -5,6 +5,14 @@ def draw_square(window, x, y, z, width, height, color = 0xffffffff)
 end
 
 
+# Requires lib_misc.rb
+class BoundingBoxManager
+  def register_image(x, y, gosu_image, id)
+    @bounding_box_hash[id] = BoundingBox.new(x, y, gosu_image.width(), gosu_image.height(), gosu_image)
+  end
+end
+
+
 module WindowSettings
   @@window = nil
   @@scale_x = 0
