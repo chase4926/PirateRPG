@@ -34,6 +34,6 @@ srand()
 
 
 Res::Vars.load('../config.yml')
-window = GameWindow.new(:window_width => Res::Vars['resolution'][0], :window_height => Res::Vars['resolution'][1], :width => 1280, :height => 720, :fullscreen => Res::Vars['fullscreen'], :caption => 'PirateRPG', :show_fps => true).show()
+window = GameWindow.new(:window_width => Res::Vars['resolution'][0], :window_height => Res::Vars['resolution'][1], :width => 1280, :height => 720, :fullscreen => Res::Vars['fullscreen'], :caption => 'Vortex Voyager', :show_fps => true).show()
 
 

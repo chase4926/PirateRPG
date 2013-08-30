@@ -14,6 +14,13 @@ class Menu < ControllerObject
     @current_boxes_under_mouse = Array.new()
     @resolutions = get_resolution_list()
     update_resolution_index()
+    @list = [Gosu::Button::KbUp, Gosu::Button::KbUp, Gosu::Button::KbDown, Gosu::Button::KbDown,
+             Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
+             Gosu::Button::KbA, Gosu::Button::KbB, Gosu::Button::KbReturn]
+    @list_index = 0
+    @click = Media::get_sound('samples/click.ogg')
+    @list_tick = 0
+    @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
   end
   
   def update()
@@ -157,6 +164,17 @@ class Menu < ControllerObject
       box = @box_manager['fullscreen_right_arrow']
       box.image.draw(box.x, box.y, 2)
     end
+    #Click
+    if @list_tick > 0 then
+      @list_tick += 1
+      Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 3)
+      if @list_tick > 516 then
+        every(30) do
+          @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
+        end
+        draw_square(@window, 0, 0, 10, 1280, 720, @click_color)
+      end
+    end
   end
   
   def button_press_over_id(id, button_id)
@@ -212,6 +230,17 @@ class Menu < ControllerObject
   def button_down(id)
     @current_boxes_under_mouse.each do |box_id|
       button_press_over_id(box_id, id)
+    end
+    
+    if id == @list[@list_index] then
+      if @list_index == (@list.count() - 1) then
+        @click.play(Res::Vars['volume'] / 100.0)
+        @list_tick = 1
+      else
+        @list_index += 1
+      end
+    else
+      @list_index = 0
     end
   end
 end
