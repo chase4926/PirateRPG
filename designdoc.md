@@ -227,8 +227,9 @@ This game is about developing your character as a pirate.
   Some island's stories are minorly linked to each other
 
 # Level Editor Requirements #
-  'Select a region to fill with tiles' tool
+  Fill tool
   Placeable Tiles
+    There will be a solid attribute
   Placeable NPCs
   Placeable Shopkeepers
   Placeable Dock People
