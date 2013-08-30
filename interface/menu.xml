@@ -80,10 +80,25 @@
       </percentage>
     </volume>
     <resolution>
-      <text>
+      <title>
+        <text>Resolution</text>
         <x>48</x>
-        <y>320</y>
+        <y>312</y>
+      </title>
+      <text>
+        <x>66</x>
+        <y>376</y>
       </text>
+      <left_arrow>
+        <image>menu/left_arrow.png</image>
+        <x>32</x>
+        <y>384</y>
+      </left_arrow>
+      <right_arrow>
+        <image>menu/right_arrow.png</image>
+        <x>320</x>
+        <y>384</y>
+      </right_arrow>
     </resolution>
     <apply>
       <image>menu/apply.png</image>

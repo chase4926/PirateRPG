@@ -33,6 +33,7 @@ $VERBOSE = true
 srand()
 
 
-window = GameWindow.new(:window_width => 1280, :window_height => 720, :width => 1280, :height => 720, :fullscreen => false, :caption => 'PirateRPG', :show_fps => true).show()
+Res::Vars.load('../config.yml')
+window = GameWindow.new(:window_width => Res::Vars['resolution'][0], :window_height => Res::Vars['resolution'][1], :width => 1280, :height => 720, :fullscreen => false, :caption => 'PirateRPG', :show_fps => true).show()
 
 

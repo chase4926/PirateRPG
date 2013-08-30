@@ -13,7 +13,7 @@ class Menu < ControllerObject
     @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @current_boxes_under_mouse = Array.new()
     @resolutions = get_resolution_list()
-    @resolution_index = @resolutions.index(Res::Vars['resolution'])
+    update_resolution_index()
   end
   
   def update()
@@ -26,42 +26,67 @@ class Menu < ControllerObject
   
   def get_resolution_list()
     result = Array.new()
-    Res::XML[@menu_xml].xpath('//resolution').each() do |res|
+    Res::XML[@menu_xml].xpath('//resolutions/resolution').each() do |res|
       result << [res.xpath('./width').text().to_i(), res.xpath('./height').text().to_i()]
     end
     return result
   end
   
+  def update_resolution_index()
+    @resolution_index = get_resolution_index()
+  end
+  
+  def get_resolution_index()
+    return @resolutions.index(Res::Vars['resolution'])
+  end
+  
   def register_buttons()
+    # New game button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//main/new_game/x'),
                                 Res::XML.int(@menu_xml, '//main/new_game/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')),
                                 'new_game')
     @box_manager['new_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image_hover'))
+    # Load game button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//main/load_game/x'),
                                 Res::XML.int(@menu_xml, '//main/load_game/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')),
                                 'load_game')
     @box_manager['load_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image_hover'))
+    # Options button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//main/options/x'),
                                 Res::XML.int(@menu_xml, '//main/options/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')),
                                 'options')
     @box_manager['options'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/options/image_hover'))
+    # Quit button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//main/quit/x'),
                                 Res::XML.int(@menu_xml, '//main/quit/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')),
                                 'quit')
     @box_manager['quit'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image_hover'))
+    # Volume slider
     @box_manager.register_image(Res::XML.int(@menu_xml, '//volume/slider/x'),
                                 Res::XML.int(@menu_xml, '//volume/slider/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')),
                                 'volume')
+    # Left arrow
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//resolution/left_arrow/x'),
+                                Res::XML.int(@menu_xml, '//resolution/left_arrow/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//resolution/left_arrow/image')),
+                                'left_arrow')
+    # Right arrow
+    @box_manager.register_image(Res::XML.int(@menu_xml, '//resolution/right_arrow/x'),
+                                Res::XML.int(@menu_xml, '//resolution/right_arrow/y'),
+                                Media::get_image(Res::XML.text(@menu_xml, '//resolution/right_arrow/image')),
+                                'right_arrow')
+    # Apply button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//options/apply/x'),
                                 Res::XML.int(@menu_xml, '//options/apply/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')),
                                 'apply')
     @box_manager['apply'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image_hover'))
+    # Defaults button
     @box_manager.register_image(Res::XML.int(@menu_xml, '//options/defaults/x'),
                                 Res::XML.int(@menu_xml, '//options/defaults/y'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//options/defaults/image')),
@@ -71,7 +96,7 @@ class Menu < ControllerObject
   
   def draw()
     # Title
-    Media::get_image(Res::XML.text(@menu_xml, '//title/image')).draw(Res::XML.int(@menu_xml, '//title/x'), Res::XML.int(@menu_xml, '//title/y'), 1)
+    Media::get_image(Res::XML.text(@menu_xml, '/menu/title/image')).draw(Res::XML.int(@menu_xml, '/menu/title/x'), Res::XML.int(@menu_xml, '/menu/title/y'), 1)
     # Background
     draw_square(@window, 0, 0, 0, 1280, 720, 0xff1c6ba0)
     # New game button
@@ -125,7 +150,12 @@ class Menu < ControllerObject
         box.image.draw(box.x, box.y, 1)
       end
       # Resolution changer
+      @options_font.draw(Res::XML.text(@menu_xml, '//resolution/title/text'), Res::XML.int(@menu_xml, '//resolution/title/x'), Res::XML.int(@menu_xml, '//resolution/title/y'), 2)
       @options_font.draw("#{@resolutions[@resolution_index][0]}x#{@resolutions[@resolution_index][1]}", Res::XML.int(@menu_xml, '//resolution/text/x'), Res::XML.int(@menu_xml, '//resolution/text/y'), 2)
+      box = @box_manager['left_arrow']
+      box.image.draw(box.x, box.y, 2)
+      box = @box_manager['right_arrow']
+      box.image.draw(box.x, box.y, 2)
     end
   end
   
@@ -159,6 +189,13 @@ class Menu < ControllerObject
                 #Reset config to defaults
                 Res::Vars.defaults()
                 Res::Vars.save()
+                update_resolution_index()
+              when 'left_arrow'
+                Res::Vars['resolution'] = @resolutions[(get_resolution_index() - 1) % @resolutions.count()]
+                update_resolution_index()
+              when 'right_arrow'
+                Res::Vars['resolution'] = @resolutions[(get_resolution_index() + 1) % @resolutions.count()]
+                update_resolution_index()
             end
         end
     end
