@@ -36,7 +36,7 @@ This game is about developing your character as a pirate.
     Precision (Affects Crit. Chance)
     Armor (Damage resistance)
     Vitality (Affects max health)
-    Willpower (Fire resistance)
+    Fire Resistance
     Fire damage bonus
   ## Player Items ##
     ### Weapons ###
@@ -66,7 +66,7 @@ This game is about developing your character as a pirate.
       #### Special effects ####
         Health regeneration
         Increase Attribute
-        Willpower Bonus
+        Fire Resistance Bonus
 
 # Level design #
   No children
@@ -81,7 +81,17 @@ This game is about developing your character as a pirate.
   ## Exploration ##
     Find gold and loot in chests
     Loot being weapons, gear, commodities
-
+    ### Item Classes ###
+      Specific items in categories listed in itemsets.md
+      Common Commodities
+      Uncommon Commodities
+      Rare Commodities
+      Ultra Rare Commodities 
+      Common Loot
+      Uncommon Loot
+      Rare Loot
+      Ultra-Rare Loot
+      Elite Loot
 # Character #
   No max level
   1 attribute point is gained per level along with points being automatically allocated to attributes
@@ -108,7 +118,7 @@ This game is about developing your character as a pirate.
   2 seperate game modes
   Both modes have battle screen
   ## Formulas ##
-    EXP required for level up where 'x' is level = 1/(((x^2)/(.00002x^3)) + 500) * 30000000
+    EXP required for level up where 'x' is level = 1/(((x^2)/(.00002x^3)) + 300) * 30000000
     Armor is temporarily (while the attack happens) reduced by the armor pierce amount
     Damage formula is ((power * (weapondamage - armor))) * ((100 - fatigue) * .01)        (probably going to change)
       If there is a critical hit, the formula becomes ((power * (weapondamage - armor) * 2)) * ((100 - fatigue) * .01)
@@ -127,6 +137,7 @@ This game is about developing your character as a pirate.
       Modify Ship => Shows your ships, and upon choosing one, you enter a menu for refitting your ship
       Cancel => Returns to the previous menu / Exits out of the docking options
   ## Combat ##
+    The player with the higher ship speed attacks first
     One move can be used per turn
     If a skill would put the player over 100 fatigue, the skill cannot be used
     10 fatigue lost per turn
@@ -134,7 +145,29 @@ This game is about developing your character as a pirate.
       Fatigue goes from 1 - 100
     Damage done will be shown above the victim's head after attack animation is complete
     Gold is given as a reward for victory
-    ### GUI Layout - Regular Combat ###
+    For battle effects/attributes, seperate ones specific to battle should be set before the battle, equal to the character's attributes
+      This is to make it easier to modify them while in battle
+    ### Naval effects/attributes to be tracked ###
+    Fire damage per turn
+    Armor pierce
+    Power
+    Precision
+    Armor
+    Speed
+    Vitality
+    Fire Resistance
+    Current Health
+    ### Regular effects/attributes to be tracked ###
+    Fire damage per turn
+    Armor pierce
+    Power
+    Precision
+    Armor
+    Vitality
+    Haste
+    Fire Resistance
+    Current Health
+    ### GUI Layout ###
       4 attacks on bottom right of screen
         Top 2 attacks are left and right equipped weapon
         Bottom 2 attacks are skills
@@ -193,7 +226,15 @@ This game is about developing your character as a pirate.
   Each island has an independent story, not important for game completion
   Some island's stories are minorly linked to each other
 
-
+# Level Editor Requirements #
+  'Select a region to fill with tiles' tool
+  Placeable Tiles
+  Placeable NPCs
+  Placeable Shopkeepers
+  Placeable Dock People
+  Placeable Enemies
+  Placeable Warps
+  Placeable Chests
 
 
 
