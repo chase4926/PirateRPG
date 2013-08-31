@@ -30,14 +30,19 @@ class Controller
     @window = window
     @phase = 0
     @menu = Menu.new(window)
+    @battle = Battle.new(window)
+  end
+  
+  def change_phase(new_phase)
+    @phase = new_phase
   end
   
   def current_objects()
     case @phase
       when 0
         return [@menu]
-      #when 1
-        #return [@gui, @dungeon_controller]
+      when 1
+        return [@battle]
     end
   end
   
@@ -62,7 +67,7 @@ class Controller
 end
 
 
-module Res
+module Res # Resource manager (Short name because it gets used a TON)
   def self.initialize(window, variables_filename)
     self::Font.initialize(window)
     self::Vars.load(variables_filename)
@@ -114,6 +119,10 @@ module Res
     
     def self.int(filename, xpath)
       return self[filename].xpath(xpath).text().to_i()
+    end
+    
+    def self.xy(filename, xpath)
+      return self[filename].xpath("#{xpath}/x").text().to_i(), self[filename].xpath("#{xpath}/y").text().to_i()
     end
   end
   

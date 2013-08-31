@@ -18,6 +18,7 @@ class Menu < ControllerObject
              Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
              Gosu::Button::KbB, Gosu::Button::KbA, Gosu::Button::KbReturn]
     @list_index = 0
+    # REMOVE BELOW SOONISH
     @click = Media::get_sound('songs/click.ogg')
     @list_tick = 0
     @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
@@ -49,63 +50,52 @@ class Menu < ControllerObject
   
   def register_buttons()
     # New game button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/new_game/x'),
-                                Res::XML.int(@menu_xml, '//main/new_game/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//main/new_game'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image')),
                                 'new_game')
     @box_manager['new_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/new_game/image_hover'))
     # Load game button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/load_game/x'),
-                                Res::XML.int(@menu_xml, '//main/load_game/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//main/load_game'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image')),
                                 'load_game')
     @box_manager['load_game'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/load_game/image_hover'))
     # Options button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/options/x'),
-                                Res::XML.int(@menu_xml, '//main/options/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//main/options'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/options/image')),
                                 'options')
     @box_manager['options'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/options/image_hover'))
     # Quit button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//main/quit/x'),
-                                Res::XML.int(@menu_xml, '//main/quit/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//main/quit'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image')),
                                 'quit')
     @box_manager['quit'].extra = Media::get_image(Res::XML.text(@menu_xml, '//main/quit/image_hover'))
     # Volume slider
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//volume/slider/x'),
-                                Res::XML.int(@menu_xml, '//volume/slider/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//volume/slider'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/background')),
                                 'volume')
     # Resolution Left arrow
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//resolution/left_arrow/x'),
-                                Res::XML.int(@menu_xml, '//resolution/left_arrow/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//resolution/left_arrow'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//resolution/left_arrow/image')),
                                 'resolution_left_arrow')
     # Resolution Right arrow
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//resolution/right_arrow/x'),
-                                Res::XML.int(@menu_xml, '//resolution/right_arrow/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//resolution/right_arrow'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//resolution/right_arrow/image')),
                                 'resolution_right_arrow')
     # Fullscreen Left arrow
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//fullscreen/left_arrow/x'),
-                                Res::XML.int(@menu_xml, '//fullscreen/left_arrow/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//fullscreen/left_arrow'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//fullscreen/left_arrow/image')),
                                 'fullscreen_left_arrow')
     # Fullscreen Right arrow
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//fullscreen/right_arrow/x'),
-                                Res::XML.int(@menu_xml, '//fullscreen/right_arrow/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//fullscreen/right_arrow'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//fullscreen/right_arrow/image')),
                                 'fullscreen_right_arrow')
     # Apply button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//options/apply/x'),
-                                Res::XML.int(@menu_xml, '//options/apply/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//options/apply'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image')),
                                 'apply')
     @box_manager['apply'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/apply/image_hover'))
     # Defaults button
-    @box_manager.register_image(Res::XML.int(@menu_xml, '//options/defaults/x'),
-                                Res::XML.int(@menu_xml, '//options/defaults/y'),
+    @box_manager.register_image(*Res::XML.xy(@menu_xml, '//options/defaults'),
                                 Media::get_image(Res::XML.text(@menu_xml, '//options/defaults/image')),
                                 'defaults')
     @box_manager['defaults'].extra = Media::get_image(Res::XML.text(@menu_xml, '//options/defaults/image_hover'))
@@ -128,7 +118,7 @@ class Menu < ControllerObject
       end
     end
     # Title
-    Media::get_image(Res::XML.text(@menu_xml, '/menu/title/image')).draw(Res::XML.int(@menu_xml, '/menu/title/x'), Res::XML.int(@menu_xml, '/menu/title/y'), 1)
+    Media::get_image(Res::XML.text(@menu_xml, '/menu/title/image')).draw(*Res::XML.xy(@menu_xml, '/menu/title'), 1)
     # New game button
     draw_button('new_game')
     # Load game button
@@ -139,26 +129,26 @@ class Menu < ControllerObject
     draw_button('quit')
     if @phase == 2 then # Options menu
       # Options background
-      Media::get_image(Res::XML.text(@menu_xml, '//options/background/image')).draw(Res::XML.int(@menu_xml, '//options/background/x'), Res::XML.int(@menu_xml, '//options/background/y'), 1)
+      Media::get_image(Res::XML.text(@menu_xml, '//options/background/image')).draw(*Res::XML.xy(@menu_xml, '//options/background'), 1)
       # Sound slider
-      @options_font.draw(Res::XML.text(@menu_xml, '//volume/text/text'), Res::XML.int(@menu_xml, '//volume/text/x'), Res::XML.int(@menu_xml, '//volume/text/y'), 2)
+      @options_font.draw(Res::XML.text(@menu_xml, '//volume/text/text'), *Res::XML.xy(@menu_xml, '//volume/text'), 2)
       @box_manager['volume'].image.draw(@box_manager['volume'].x, @box_manager['volume'].y, 2)
-      @options_font.draw("#{Res::Vars['volume']}%", Res::XML.int(@menu_xml, '//volume/percentage/x'), Res::XML.int(@menu_xml, '//volume/percentage/y'), 2)
+      @options_font.draw("#{Res::Vars['volume']}%", *Res::XML.xy(@menu_xml, '//volume/percentage'), 2)
       Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).draw(((Res::Vars['volume'] / 100.0) * 240) + Res::XML.int(@menu_xml, '//volume/slider/x') - (Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).width() / 2), Res::XML.int(@menu_xml, '//volume/slider/y') + (Media::get_image(Res::XML.text(@menu_xml, '//volume/slider/image')).height() / 2), 3)
       # Apply button
       draw_button('apply')
       # Defaults button
       draw_button('defaults')
       # Resolution changer
-      @options_font.draw(Res::XML.text(@menu_xml, '//resolution/title/text'), Res::XML.int(@menu_xml, '//resolution/title/x'), Res::XML.int(@menu_xml, '//resolution/title/y'), 2)
-      @options_font.draw("#{@resolutions[@resolution_index][0]}x#{@resolutions[@resolution_index][1]}", Res::XML.int(@menu_xml, '//resolution/text/x'), Res::XML.int(@menu_xml, '//resolution/text/y'), 2)
+      @options_font.draw(Res::XML.text(@menu_xml, '//resolution/title/text'), *Res::XML.xy(@menu_xml, '//resolution/title'), 2)
+      @options_font.draw("#{@resolutions[@resolution_index][0]}x#{@resolutions[@resolution_index][1]}", *Res::XML.xy(@menu_xml, '//resolution/text'), 2)
       box = @box_manager['resolution_left_arrow']
       box.image.draw(box.x, box.y, 2)
       box = @box_manager['resolution_right_arrow']
       box.image.draw(box.x, box.y, 2)
       # Fullscreen changer
-      @options_font.draw(Res::XML.text(@menu_xml, '//fullscreen/title/text'), Res::XML.int(@menu_xml, '//fullscreen/title/x'), Res::XML.int(@menu_xml, '//fullscreen/title/y'), 2)
-      @options_font.draw(Res::Vars['fullscreen'] ? 'yes' : 'no', Res::XML.int(@menu_xml, '//fullscreen/text/x'), Res::XML.int(@menu_xml, '//fullscreen/text/y'), 2)
+      @options_font.draw(Res::XML.text(@menu_xml, '//fullscreen/title/text'), *Res::XML.xy(@menu_xml, '//fullscreen/title'), 2)
+      @options_font.draw(Res::Vars['fullscreen'] ? 'yes' : 'no', *Res::XML.xy(@menu_xml, '//fullscreen/text'), 2)
       box = @box_manager['fullscreen_left_arrow']
       box.image.draw(box.x, box.y, 2)
       box = @box_manager['fullscreen_right_arrow']
@@ -184,7 +174,9 @@ class Menu < ControllerObject
         case @phase
           when 0 # Main menu
             case id
-              #when 'new_game'
+              when 'new_game'
+                #TEMPORARY: Switch to the battle screen
+                push_event(:change_phase, 1)
               #when 'load_game'
               when 'options'
                 #Open the options menu

@@ -26,6 +26,7 @@ include EveryModule
 # Source files ---
 require 'engine.rb'
 require 'menu.rb'
+require 'battle.rb'
 # ---
 
 $VERBOSE = true
