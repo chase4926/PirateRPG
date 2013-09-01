@@ -31,6 +31,12 @@ class Controller
     @phase = 0
     @menu = Menu.new(window)
     @battle = Battle.new(window)
+    
+    # Test code below, this would NEVER be in the Controller class
+    @player = Player.new()
+    @enemy = Enemy.new()
+    @battle.set_player(@player)
+    @battle.set_enemy(@enemy)
   end
   
   def change_phase(new_phase)

@@ -1,19 +1,41 @@
 <battle>
+  <nametag>
+    <font>
+      <name>Batang</name>
+      <size>32</size>
+    </font>
+  </nametag>
   <player>
     <health>
       <background_image>health_background.png</background_image>
       <color>0xff660000</color>
       <x>912</x>
-      <y>16</y>
+      <y>48</y>
     </health>
+    <nametag>
+      <x>912</x>
+      <y>10</y>
+    </nametag>
+    <image>
+      <x>976</x>
+      <y>128</y>
+    </image>
   </player>
   <enemy>
     <health>
       <background_image>health_background.png</background_image>
       <color>0xff660000</color>
       <x>112</x>
-      <y>16</y>
+      <y>48</y>
     </health>
+    <nametag>
+      <x>112</x>
+      <y>10</y>
+    </nametag>
+    <image>
+      <x>176</x>
+      <y>128</y>
+    </image>
   </enemy>
 </battle>
 <!--

@@ -111,6 +111,7 @@ class Menu < ControllerObject
   end
   
   def draw()
+    Alphabet::draw_text('Copyright 2013 Chase Arnold & James Hammond', 752, 704, 10, 2)
     # Background
     20.times() do |x|
       12.times() do |y|
@@ -160,7 +161,7 @@ class Menu < ControllerObject
       draw_square(@window, 639, 0, 2, 2, -300 + (@list_tick < 460 ? @list_tick : 460), 0xff000000)
       Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 3)
       if @list_tick > 516 then
-        every(30) do
+        every(25) do
           @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
         end
         draw_square(@window, 0, 0, 10, 1280, 720, @click_color)
