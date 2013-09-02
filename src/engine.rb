@@ -120,30 +120,6 @@ module Res # Resource manager (Short name because it gets used a TON)
     end
   end
   
-  module XML
-    @@xml_hash = {}
-    def self.[](filename)
-      if not @@xml_hash[filename] then
-        File.open(filename, 'r') do |file|
-          @@xml_hash[filename] = Nokogiri::XML(file)
-        end
-      end
-      return @@xml_hash[filename]
-    end
-    
-    def self.text(filename, xpath)
-      return self[filename].xpath(xpath).text()
-    end
-    
-    def self.int(filename, xpath)
-      return self[filename].xpath(xpath).text().to_i()
-    end
-    
-    def self.xy(filename, xpath)
-      return self[filename].xpath("#{xpath}/x").text().to_i(), self[filename].xpath("#{xpath}/y").text().to_i()
-    end
-  end
-  
   module Font
     @@font_hash = {}
     @@window = nil
