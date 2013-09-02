@@ -1,0 +1,29 @@
+---
+nametag:
+  font:
+    name: Batang
+    size: '32'
+player:
+  health:
+    background_image: health_background.png
+    color: '0xff660000'
+    x: '912'
+    y: '48'
+  nametag:
+    x: '912'
+    y: '10'
+  image:
+    x: '976'
+    y: '128'
+enemy:
+  health:
+    background_image: health_background.png
+    color: '0xff660000'
+    x: '112'
+    y: '48'
+  nametag:
+    x: '112'
+    y: '10'
+  image:
+    x: '176'
+    y: '128'

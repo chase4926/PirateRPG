@@ -1,0 +1,100 @@
+---
+resolutions:
+- width: 1024
+  height: 576
+- width: 1280
+  height: 720
+- width: 1366
+  height: 768
+- width: 1600
+  height: 900
+- width: 1920
+  height: 1080
+title:
+  image: menu/title.png
+  x: 32
+  y: 0
+main:
+  new_game:
+    image: menu/new_game.png
+    image_hover: menu/new_game_hover.png
+    x: 920
+    y: 50
+  load_game:
+    image: menu/load_game.png
+    image_hover: menu/load_game_hover.png
+    x: 920
+    y: 150
+  options:
+    image: menu/options.png
+    image_hover: menu/options_hover.png
+    x: 920
+    y: 250
+  quit:
+    image: menu/quit.png
+    image_hover: menu/quit_hover.png
+    x: 920
+    y: 350
+options:
+  font:
+    name: Batang
+    size: 46
+  background:
+    image: menu/options_back.png
+    x: 16
+    y: 160
+  volume:
+    text:
+      text: Volume
+      x: 48
+      y: 180
+    slider:
+      background: menu/volume.png
+      image: menu/slider.png
+      x: 48
+      y: 244
+    percentage:
+      x: 312
+      y: 238
+  resolution:
+    title:
+      text: Resolution
+      x: 48
+      y: 312
+    text:
+      x: 66
+      y: 376
+    left_arrow:
+      image: menu/left_arrow.png
+      x: 32
+      y: 384
+    right_arrow:
+      image: menu/right_arrow.png
+      x: 320
+      y: 384
+  fullscreen:
+    title:
+      text: Fullscreen
+      x: 48
+      y: 448
+    text:
+      x: 82
+      y: 508
+    left_arrow:
+      image: menu/left_arrow.png
+      x: 32
+      y: 520
+    right_arrow:
+      image: menu/right_arrow.png
+      x: 182
+      y: 520
+  apply:
+    image: menu/apply.png
+    image_hover: menu/apply_hover.png
+    x: 688
+    y: 584
+  defaults:
+    image: menu/defaults.png
+    image_hover: menu/defaults_hover.png
+    x: 432
+    y: 584

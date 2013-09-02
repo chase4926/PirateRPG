@@ -108,6 +108,18 @@ module Res # Resource manager (Short name because it gets used a TON)
     end
   end
   
+  module YML
+    @@yaml_hash = {}
+    def self.[](filename)
+      if not @@yaml_hash[filename] then
+        File.open(filename, 'r') do |file|
+          @@yaml_hash[filename] = YAML::load(file.read())
+        end
+      end
+      return @@yaml_hash[filename]
+    end
+  end
+  
   module XML
     @@xml_hash = {}
     def self.[](filename)
