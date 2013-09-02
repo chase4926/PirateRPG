@@ -10,8 +10,8 @@ class Menu < ControllerObject
     @options_font = Res::Font[@menu_yml['options']['font']['name'], @menu_yml['options']['font']['size']]
     @box_manager = BoundingBoxManager.new()
     register_buttons()
-    @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @current_boxes_under_mouse = Array.new()
+    @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @resolutions = get_resolution_list()
     update_resolution_index()
     # REMOVE BELOW SOONISH
