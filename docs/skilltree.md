@@ -49,3 +49,21 @@ armor represents the opponent's armor, playerarmor represents the player's armor
       Advanced sail design allows for a 30% increase in ship speed
     ### Reckless Charge (70) ###
       Slams into the enemy, attempting to go right through them. Deals (power * playerarmor * speed) damage and recieving armor damage
+
+
+# Traits #
+  In parenthesis are the amount of trait points gained/lost
+  ## Positive Traits ##
+    ### Trained Fighter (-2) ###
+      +20% to power
+    ### Fiery Passion (5) ###
+      +50% fire damage
+    ### Elite Negotiator (3) ###
+      +25% to prices from trading
+  ## Negative Traits ##
+    ### Wimp (3) ###
+      -25% vitality
+    ### No passion (4) ###
+      -50% fire damage
+    ### No haggling skill (2) ###
+      -25% to prices from trading

@@ -30,17 +30,9 @@ This game is about developing your character as a pirate.
     Movement speed increase
     Health Regeneration
     Increase Attribute
-  ## Attributes ##
-    All items can have Seperate Attributes
-    Power (Affects damage)
-    Precision (Affects Crit. Chance)
-    Armor (Damage resistance)
-    Vitality (Affects max health)
-    Fire Resistance
-    Fire damage bonus
   ## Player Items ##
     ### Weapons ###
-      Attributes (Damage, Haste)
+      Attributes (Damage)
       Can have armor pierce effect
     ### Gear ###
       Uses above attributes and special effects
@@ -60,7 +52,7 @@ This game is about developing your character as a pirate.
           Armor Pierce reduces armor
           Damage on boarding hooks does damage and also affects chance of successful 'hook'
     ### "Gear" ###
-      Ship gear gives attributes(Armor, Vitality, Precision, Speed)
+      Ship gear gives attributes(Armor, max health, Precision, Speed)
       Ship has 'slots' for gear
       Amount of gear slots depends on ship
       #### Special effects ####
@@ -80,6 +72,7 @@ This game is about developing your character as a pirate.
     There are sub-maps (Taverns, houses, caves)
   ## Exploration ##
     Find gold and loot in chests
+      Chests have a level, this level +- 25% is the level of the dropped item
     Loot being weapons, gear, commodities
     ### Item Classes ###
       Specific items in categories listed in itemsets.md
@@ -97,13 +90,14 @@ This game is about developing your character as a pirate.
   1 attribute point is gained per level along with points being automatically allocated to attributes
   The player does not start with skills
   The player gains 1 skill point per 5 levels and no attribute points(5,10,15...)
-  It is expected that after 'completing' the game the player will be level 80-100
+  It is expected that after 'completing' the game the player will be level 50
   ## Healing ##
     The character can buy and find bandages which are used for healing
+    Different tiers of bandages, level requirement to use higher tiers
   ## Skill Tree ##
     2 Branches(Combat, Naval)
     Combat branch relates to all things in exploration mode, naval for ship mode
-    If all skills have been 'maxed out' skill points can be put into any of the attributes (Power, Precision, Armor, Vitality)
+    If all skills have been 'maxed out' skill points can be put into any of the attributes (Power, Precision, Armor, max health)
   ## Inventory ##
     3 Tiers of bags
     Each tier has a certain amount of slots (8, 16, 24)
@@ -122,7 +116,7 @@ This game is about developing your character as a pirate.
     Armor is temporarily (while the attack happens) reduced by the armor pierce amount
     Damage formula is ((power * (weapondamage - armor))) * ((100 - fatigue) * .01)        (probably going to change)
       If there is a critical hit, the formula becomes ((power * (weapondamage - armor) * 2)) * ((100 - fatigue) * .01)
-    Critical chance is (precision / (enemylevel * 5))
+    Critical chance is 1/(((0.5x^2)/(.000075x^3)) + 90) * 9000
     ### Fire Damage ###
       firedamage - fireresist = firestrength
       Fire Strength affects the effect of fire damage
@@ -145,8 +139,14 @@ This game is about developing your character as a pirate.
       Fatigue goes from 1 - 100
     Damage done will be shown above the victim's head after attack animation is complete
     Gold is given as a reward for victory
-    For battle effects/attributes, seperate ones specific to battle should be set before the battle, equal to the character's attributes
+    For battle effects/attributes, seperate ones specific to battle should be set before the battle, 
+      equal to the character's attributes
       This is to make it easier to modify them while in battle
+      ### Combat AI ###
+        Option A -
+          Uses random attacks
+        Option B -
+          Tries to inflict fire damage, then uses status impairing attacks, then uses damaging attack at random
     ### Naval effects/attributes to be tracked ###
     Fire damage per turn
     Armor pierce
@@ -154,7 +154,7 @@ This game is about developing your character as a pirate.
     Precision
     Armor
     Speed
-    Vitality
+    Max health
     Fire Resistance
     Current Health
     ### Regular effects/attributes to be tracked ###
@@ -163,7 +163,7 @@ This game is about developing your character as a pirate.
     Power
     Precision
     Armor
-    Vitality
+    Max health
     Haste
     Fire Resistance
     Current Health
@@ -171,9 +171,7 @@ This game is about developing your character as a pirate.
       4 attacks on bottom right of screen
         Top 2 attacks are left and right equipped weapon
         Bottom 2 attacks are skills
-      Middle bottom of the screen shows player health and fatigue above enemy health
-      Player health bar is to the right of the player name with fatigue bar below that
-      Enemy health bar is below fatigue bar with the enemy name to the left, below the player name
+      Health/Fatigue bars above sprites at top of screen
       "Current Value / Maximum Value" are displayed in the middle of the health / fatigue bars
       Enemy sprite is on the left side of the screen
       Player sprite is to the right of the screen
@@ -254,3 +252,24 @@ Folders are marked with {foldername}
       shop_prices.yml - Same as above
       npc.dialogue
       events.yml
+
+# Attributes #
+
+Vitality (Determines max health) => 1 vitality gives 10 max health
+Precision (Determines crit chance)
+Power (Effects base damage value)
+Armor (Effects base defense value)
+
+# Stats #
+
+Max health & Current
+Crit Chance
+Base damage value (ability gives more)
+Base defense value (gear gives more)
+
+
+
+
+
+
+
