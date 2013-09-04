@@ -63,6 +63,7 @@ class Battle < ControllerObject
     register_buttons()
     @current_boxes_under_mouse = Array.new()
     @nametag_font = Res::Font[@battle_yml['nametag']['font']['name'], @battle_yml['nametag']['font']['size']]
+    @ability_font = Res::Font[@battle_yml['abilities']['font']['name'], @battle_yml['abilities']['font']['size']]
     @player_health_bar_image = Media::get_image(@battle_yml['player']['health']['background_image'])
     @enemy_health_bar_image = Media::get_image(@battle_yml['enemy']['health']['background_image'])
     @player = nil
@@ -104,8 +105,7 @@ class Battle < ControllerObject
     @current_boxes_under_mouse = @box_manager.hit_test_boxes(@window.relative_mouse_x, @window.relative_mouse_y)
   end
   
-  def draw_box(id, z=2)
-    box = @box_manager[id]
+  def draw_box(box, z=2)
     if box.extra and @current_boxes_under_mouse.include?(id) then
       box.extra.draw(box.x, box.y, z)
     else
@@ -117,24 +117,36 @@ class Battle < ControllerObject
     if @player != nil and @enemy != nil then # Show black screen until player & enemy are received
       # Player health bar
       @player_health_bar_image.draw(@battle_yml['player']['health']['x'], @battle_yml['player']['health']['y'], 2)
-      draw_square(@window, @battle_yml['player']['health']['x'] + 16, @battle_yml['player']['health']['y'] + 4, 1, (@player_health_bar_image.width - 32) * (@player.stats['health'].to_f() / Stats.get_max_health(@player.stats['vitality'])), @player_health_bar_image.height - 8, Gosu::Color.new(@battle_yml['player']['health']['color'].to_i(16)))
+      draw_square(@window, @battle_yml['player']['health']['x'] + 16, @battle_yml['player']['health']['y'] + 4, 1, (@player_health_bar_image.width - 32) * (@player.stats['health'].to_f() / Stats.get_max_health(@player.stats['vitality'])), @player_health_bar_image.height - 8, @battle_yml['player']['health']['color'].to_i(16))
       # Player nametag
       @nametag_font.draw(@player.stats['name'], @battle_yml['player']['nametag']['x'], @battle_yml['player']['nametag']['y'], 1)
       # Player battle image
       @player.battle_image.draw(@battle_yml['player']['image']['x'], @battle_yml['player']['image']['y'], 2)
       # Enemy health bar
       @enemy_health_bar_image.draw(@battle_yml['enemy']['health']['x'], @battle_yml['enemy']['health']['y'], 2)
-      draw_square(@window, @battle_yml['enemy']['health']['x'] + 16, @battle_yml['enemy']['health']['y'] + 4, 1, (@enemy_health_bar_image.width - 32) * (@enemy.stats['health'].to_f() / Stats.get_max_health(@enemy.stats['vitality'])), @enemy_health_bar_image.height - 8, Gosu::Color.new(@battle_yml['enemy']['health']['color'].to_i(16)))
+      draw_square(@window, @battle_yml['enemy']['health']['x'] + 16, @battle_yml['enemy']['health']['y'] + 4, 1, (@enemy_health_bar_image.width - 32) * (@enemy.stats['health'].to_f() / Stats.get_max_health(@enemy.stats['vitality'])), @enemy_health_bar_image.height - 8, @battle_yml['enemy']['health']['color'].to_i(16))
       # Enemy nametag
       @nametag_font.draw(@enemy.stats['name'], @battle_yml['enemy']['nametag']['x'], @battle_yml['enemy']['nametag']['y'], 1)
       # Enemy battle image
       @enemy.battle_image.draw(@battle_yml['enemy']['image']['x'], @battle_yml['enemy']['image']['y'], 2)
       
       #Ability buttons
-      draw_box('ability_button1')
-      draw_box('ability_button2')
-      draw_box('ability_button3')
-      draw_box('ability_button4')
+      # Ability 1
+      box = @box_manager['ability_button1']
+      draw_box(box)
+      @ability_font.draw(@player.abilities[0].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[0].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      # Ability 2
+      box = @box_manager['ability_button2']
+      draw_box(box)
+      @ability_font.draw(@player.abilities[1].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[1].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      # Ability 3
+      box = @box_manager['ability_button3']
+      draw_box(box)
+      @ability_font.draw(@player.abilities[2].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[2].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      # Ability 4
+      box = @box_manager['ability_button4']
+      draw_box(box)
+      @ability_font.draw(@player.abilities[3].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[3].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
     end
   end
 end

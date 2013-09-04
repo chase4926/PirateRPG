@@ -2,8 +2,12 @@
 nametag:
   font:
     name: Batang
-    size: 32
+    size: 30
 abilities:
+  font:
+    name: Arial
+    size: 32
+    color: '0xffffd700'
   button_image: ability_background.png
   button1:
     x: 383
