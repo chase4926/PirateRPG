@@ -13,6 +13,47 @@ module Stats
 end
 
 
+class Ability
+  private_class_method :new
+  
+  # weapon:
+  # title, desc, damage minimum, damage maximum, fire_damage, armor_pierce
+  def self.from_weapon(weapon_data)
+    return new(weapon_data)
+  end
+  
+  # abilites:
+  # attach a script
+  def self.from_script(script_name)
+    return new(:script => Abilities.const_get(script_name))
+  end
+  
+  def initialize(vars={})
+    @vars = vars
+  end
+  
+  def title(*args)
+    if @vars[:script] then
+      # It's an ability, return ability name
+      return @vars[:script].title(*args)
+    else
+      # It's a weapon, return weapon name
+      return @vars[:title]
+    end
+  end
+  
+  def desc(*args)
+    if @vars[:script] then
+      # It's an ability, return ability description
+      return @vars[:script].desc(*args)
+    else
+      # It's a weapon, return weapon description
+      return @vars[:desc]
+    end
+  end
+end
+
+
 class Battle < ControllerObject
   def initialize(window)
     super()

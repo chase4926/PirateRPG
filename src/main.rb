@@ -28,6 +28,8 @@ require 'menu.rb'
 require 'battle.rb'
 require 'player.rb'
 require 'enemy.rb'
+
+require 'abilities.rb'
 # ---
 
 $VERBOSE = true
