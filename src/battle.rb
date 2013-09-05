@@ -32,8 +32,12 @@ class Ability
     @vars = vars
   end
   
-  def title(*args)
-    if @vars[:script] then
+  def is_script?()
+    return @vars[:script] != nil
+  end
+  
+  def title(*args) # The title is short-form for the ability's name
+    if is_script?() then
       # It's an ability, return ability name
       return @vars[:script].title(*args)
     else
@@ -42,13 +46,35 @@ class Ability
     end
   end
   
+  def full_name(*args) # The name is the full name for a weapon, and normally the same for a script aswell
+    if is_script?() then
+      # Check if it responds to full_name(), and if so, return that
+      if @vars[:script].respond_to?(:full_name) then
+        return @vars[:script].full_name(*args)
+      else
+        return @vars[:script].title(*args)
+      end
+    else
+      # It's a weapon, therefore it has a full name
+      return @vars[:full_name]
+    end
+  end
+  
   def desc(*args)
-    if @vars[:script] then
+    if is_script?() then
       # It's an ability, return ability description
       return @vars[:script].desc(*args)
     else
       # It's a weapon, return weapon description
-      return @vars[:desc]
+      result = String.new(@vars[:desc])
+      result << "\nDamage: <c=cc2828>#{@vars[:dam_min]}-#{@vars[:dam_max]}</c>"
+      if @vars[:fire_dam] > 0 then
+        result << "\nFire Damage: <c=ff7800>#{@vars[:fire_dam]}</c>"
+      end
+      if @vars[:armor_pierce] > 0 then
+        result << "\nArmor Pierce: <c=800000>#{@vars[:armor_pierce]}</c>"
+      end
+      return result
     end
   end
 end
@@ -62,10 +88,13 @@ class Battle < ControllerObject
     @box_manager = BoundingBoxManager.new()
     register_buttons()
     @current_boxes_under_mouse = Array.new()
+    # Health bars
     @nametag_font = Res::Font[@battle_yml['nametag']['font']['name'], @battle_yml['nametag']['font']['size']]
-    @ability_font = Res::Font[@battle_yml['abilities']['font']['name'], @battle_yml['abilities']['font']['size']]
     @player_health_bar_image = Media::get_image(@battle_yml['player']['health']['background_image'])
     @enemy_health_bar_image = Media::get_image(@battle_yml['enemy']['health']['background_image'])
+    # Abilities
+    @ability_font = Res::Font[@battle_yml['abilities']['font']['name'], @battle_yml['abilities']['font']['size']]
+    @ability_desc_font = Res::Font[@battle_yml['abilities']['desc']['font']['name'], @battle_yml['abilities']['desc']['font']['size']]
     @player = nil
     @enemy = nil
   end
@@ -115,6 +144,9 @@ class Battle < ControllerObject
   
   def draw()
     if @player != nil and @enemy != nil then # Show black screen until player & enemy are received
+      #TEST REMOVE BELOW
+      #Media::get_image('battle/land_background.png').draw(0, 0, 0)
+      
       # Player health bar
       @player_health_bar_image.draw(@battle_yml['player']['health']['x'], @battle_yml['player']['health']['y'], 2)
       draw_square(@window, @battle_yml['player']['health']['x'] + 16, @battle_yml['player']['health']['y'] + 4, 1, (@player_health_bar_image.width - 32) * (@player.stats['health'].to_f() / Stats.get_max_health(@player.stats['vitality'])), @player_health_bar_image.height - 8, @battle_yml['player']['health']['color'].to_i(16))
@@ -134,19 +166,32 @@ class Battle < ControllerObject
       # Ability 1
       box = @box_manager['ability_button1']
       draw_box(box)
-      @ability_font.draw(@player.abilities[0].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[0].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      @ability_font.draw(@player.abilities[0].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[0].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
       # Ability 2
       box = @box_manager['ability_button2']
       draw_box(box)
-      @ability_font.draw(@player.abilities[1].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[1].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      @ability_font.draw(@player.abilities[1].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[1].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
       # Ability 3
       box = @box_manager['ability_button3']
       draw_box(box)
-      @ability_font.draw(@player.abilities[2].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[2].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      @ability_font.draw(@player.abilities[2].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[2].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
       # Ability 4
       box = @box_manager['ability_button4']
       draw_box(box)
-      @ability_font.draw(@player.abilities[3].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[3].title()))/2.0), box.y+32, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      @ability_font.draw(@player.abilities[3].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[3].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
+      
+      # Ability description
+      if id = @current_boxes_under_mouse.select(){|b| b.start_with?('ability')}[0] then
+        box = @box_manager[id]
+        ability = @player.abilities[id.split('button')[1].to_i()-1]
+        # Description background
+        
+        Media::get_image(@battle_yml['abilities']['desc']['image']).draw(@battle_yml['abilities']['desc']['x'], @battle_yml['abilities']['desc']['y'], 2)
+        # Ability full name
+        @ability_desc_font.draw(ability.full_name(), @battle_yml['abilities']['desc']['x']+8, @battle_yml['abilities']['desc']['y']+8, 3)
+        # Description (if weapon, this will include auto-generated stat information)
+        @ability_desc_font.draw_with_linebreaks(ability.desc(@player, @enemy), @battle_yml['abilities']['desc']['x']+8, @battle_yml['abilities']['desc']['y']+32, 3, 1, 1, @battle_yml['abilities']['desc']['font']['color'].to_i(16))
+      end
     end
   end
 end

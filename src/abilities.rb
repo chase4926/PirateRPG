@@ -8,6 +8,10 @@ module Abilities
       return 'Heal'
     end
     
+    def self.full_name()
+      return 'Example of a full name for Heal'
+    end
+    
     def self.desc(player, enemy)
       return 'Restores x health.'
     end

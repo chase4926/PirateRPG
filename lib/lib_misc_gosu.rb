@@ -5,6 +5,18 @@ def draw_square(window, x, y, z, width, height, color = 0xffffffff)
 end
 
 
+# Adds the ability to draw text including line breaks
+module Gosu
+  class Font
+    def draw_with_linebreaks(text, x, y, z, factor_x = 1, factor_y = 1, color = 0xffffffff, mode = :default, y_padding=0)
+      text.split("\n").each_with_index() do |line, i|
+        self.draw(line, x, y+(i*(self.height+y_padding)), z, factor_x, factor_y, color, mode)
+      end
+    end
+  end
+end
+
+
 # Requires lib_misc.rb
 class BoundingBoxManager
   def register_image(x, y, gosu_image, id)

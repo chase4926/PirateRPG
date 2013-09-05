@@ -6,9 +6,9 @@ nametag:
 abilities:
   font:
     name: Arial
-    size: 32
+    size: 36
     color: '0xffffd700'
-  button_image: ability_background.png
+  button_image: battle/ability_background.png
   button1:
     x: 383
     y: 462
@@ -21,9 +21,17 @@ abilities:
   button4:
     x: 641
     y: 592
+  desc:
+    font:
+      name: Arial
+      size: 24
+      color: '0xfffff840'
+    image: battle/description_background.png
+    x: 900
+    y: 462
 player:
   health:
-    background_image: health_background.png
+    background_image: battle/health_background.png
     color: '0xff660000'
     x: 912
     y: 48
@@ -35,7 +43,7 @@ player:
     y: 128
 enemy:
   health:
-    background_image: health_background.png
+    background_image: battle/health_background.png
     color: '0xff660000'
     x: 112
     y: 48
