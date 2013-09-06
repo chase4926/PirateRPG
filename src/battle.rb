@@ -8,6 +8,7 @@ class Battler
   def initialize()
     @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
     @abilities = Array.new() #Array to hold abilities
+    @dots = {:fire => []} # Damage Over Time
   end
   
   def [](key)
@@ -16,6 +17,26 @@ class Battler
   
   def []=(key, value)
     @stats[key] = value
+  end
+  
+  def pass_turn()
+    @dots[:fire].each_with_index() do |item, i|
+      hurt(item[0])
+      @dots[:fire][i][1] -= 1
+    end
+    
+    # Clear out all expired
+    @dots.each_value() do |item|
+      item.delete_if() {|i| i[1] <= 0}
+    end
+  end
+  
+  def add_dot(key, damage, length)
+    if @dots[key] then
+      @dots[key] << [damage, length]
+    else
+      @dots[key] = [[damage, length]]
+    end
   end
   
   def hurt(amount)
@@ -116,7 +137,9 @@ class Ability
       if Stats.get_crit_chance(player['precision']) >= ((rand(1001) + 1) / 10.0) then
         damage *= 2
       end
-      # FIXME: Add fire damage system
+      if @vars[:fire_len] >= 1 then
+        enemy.add_dot(:fire, @vars[:fire_dam], @vars[:fire_len])
+      end
       enemy.hurt(damage - armor <= 0 ? 0 : damage - armor)
     end
   end
@@ -178,11 +201,13 @@ class Battle < ControllerObject
   end
   
   def take_turn(ability)
-    # FOR TESTING ONLY
+    # FIXME: Later the enemy turn will be timed and stuffs
     # Player turn
     ability.use(@player, @enemy)
+    @player.pass_turn()
     # Enemy turn
     @enemy.abilities[rand(@enemy.abilities.count())].use(@player, @enemy)
+    @enemy.pass_turn()
   end
   
   def draw_box(box, z=2)
@@ -197,6 +222,8 @@ class Battle < ControllerObject
     if @player != nil and @enemy != nil then # Show black screen until player & enemy are received
       #TEST REMOVE BELOW
       #Media::get_image('battle/land_background.png').draw(0, 0, 0)
+      
+      #draw_square(@window, 16, 48, 1, 32, 32)
       
       # Player health bar
       @player_health_bar_image.draw(@battle_yml['player']['health']['x'], @battle_yml['player']['health']['y'], 2)
