@@ -2,6 +2,32 @@
 #battle.rb
 
 
+class Battler
+  attr_accessor :stats
+  attr_reader :abilities
+  def initialize()
+    @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
+    @abilities = Array.new() #Array to hold abilities
+  end
+  
+  def [](key)
+    return @stats[key]
+  end
+  
+  def []=(key, value)
+    @stats[key] = value
+  end
+  
+  def hurt(amount)
+    if self['health'] - amount <= 0 then
+      self['health'] = 0
+    else
+      self['health'] -= amount
+    end
+  end
+end
+
+
 module Stats
   def self.get_max_health(vitality)
     return vitality * 10
@@ -67,7 +93,7 @@ class Ability
     else
       # It's a weapon, return weapon description
       result = String.new(@vars[:desc])
-      result << "\nDamage: <c=cc2828>#{@vars[:dam_min]}-#{@vars[:dam_max]}</c>"
+      result << "\nDamage: <c=ff4d4d>#{@vars[:dam_min]}-#{@vars[:dam_max]}</c>"
       if @vars[:fire_dam] > 0 then
         result << "\nFire Damage: <c=ff7800>#{@vars[:fire_dam]}</c>"
       end
@@ -75,6 +101,23 @@ class Ability
         result << "\nArmor Pierce: <c=800000>#{@vars[:armor_pierce]}</c>"
       end
       return result
+    end
+  end
+  
+  def use(player, enemy)
+    if is_script?() then
+      # It's an ability, just use the script provided
+      @vars[:script].script(player, enemy)
+    else
+      # It's a weapon
+      damage = @vars[:dam_min] + rand(@vars[:dam_max] - @vars[:dam_min] + 1)
+      armor = enemy['armor'] - @vars[:armor_pierce] <= 0 ? 0 : enemy['armor'] - @vars[:armor_pierce]
+      
+      if Stats.get_crit_chance(player['precision']) >= ((rand(1001) + 1) / 10.0) then
+        damage *= 2
+      end
+      # FIXME: Add fire damage system
+      enemy.hurt(damage - armor <= 0 ? 0 : damage - armor)
     end
   end
 end
@@ -134,6 +177,14 @@ class Battle < ControllerObject
     @current_boxes_under_mouse = @box_manager.hit_test_boxes(@window.relative_mouse_x, @window.relative_mouse_y)
   end
   
+  def take_turn(ability)
+    # FOR TESTING ONLY
+    # Player turn
+    ability.use(@player, @enemy)
+    # Enemy turn
+    @enemy.abilities[rand(@enemy.abilities.count())].use(@player, @enemy)
+  end
+  
   def draw_box(box, z=2)
     if box.extra and @current_boxes_under_mouse.include?(id) then
       box.extra.draw(box.x, box.y, z)
@@ -149,16 +200,16 @@ class Battle < ControllerObject
       
       # Player health bar
       @player_health_bar_image.draw(@battle_yml['player']['health']['x'], @battle_yml['player']['health']['y'], 2)
-      draw_square(@window, @battle_yml['player']['health']['x'] + 16, @battle_yml['player']['health']['y'] + 4, 1, (@player_health_bar_image.width - 32) * (@player.stats['health'].to_f() / Stats.get_max_health(@player.stats['vitality'])), @player_health_bar_image.height - 8, @battle_yml['player']['health']['color'].to_i(16))
+      draw_square(@window, @battle_yml['player']['health']['x'] + 16, @battle_yml['player']['health']['y'] + 4, 1, (@player_health_bar_image.width - 32) * (@player['health'].to_f() / Stats.get_max_health(@player['vitality'])), @player_health_bar_image.height - 8, @battle_yml['player']['health']['color'].to_i(16))
       # Player nametag
-      @nametag_font.draw(@player.stats['name'], @battle_yml['player']['nametag']['x'], @battle_yml['player']['nametag']['y'], 1)
+      @nametag_font.draw(@player['name'], @battle_yml['player']['nametag']['x'], @battle_yml['player']['nametag']['y'], 1)
       # Player battle image
       @player.battle_image.draw(@battle_yml['player']['image']['x'], @battle_yml['player']['image']['y'], 2)
       # Enemy health bar
       @enemy_health_bar_image.draw(@battle_yml['enemy']['health']['x'], @battle_yml['enemy']['health']['y'], 2)
-      draw_square(@window, @battle_yml['enemy']['health']['x'] + 16, @battle_yml['enemy']['health']['y'] + 4, 1, (@enemy_health_bar_image.width - 32) * (@enemy.stats['health'].to_f() / Stats.get_max_health(@enemy.stats['vitality'])), @enemy_health_bar_image.height - 8, @battle_yml['enemy']['health']['color'].to_i(16))
+      draw_square(@window, @battle_yml['enemy']['health']['x'] + 16, @battle_yml['enemy']['health']['y'] + 4, 1, (@enemy_health_bar_image.width - 32) * (@enemy['health'].to_f() / Stats.get_max_health(@enemy['vitality'])), @enemy_health_bar_image.height - 8, @battle_yml['enemy']['health']['color'].to_i(16))
       # Enemy nametag
-      @nametag_font.draw(@enemy.stats['name'], @battle_yml['enemy']['nametag']['x'], @battle_yml['enemy']['nametag']['y'], 1)
+      @nametag_font.draw(@enemy['name'], @battle_yml['enemy']['nametag']['x'], @battle_yml['enemy']['nametag']['y'], 1)
       # Enemy battle image
       @enemy.battle_image.draw(@battle_yml['enemy']['image']['x'], @battle_yml['enemy']['image']['y'], 2)
       
@@ -192,6 +243,30 @@ class Battle < ControllerObject
         # Description (if weapon, this will include auto-generated stat information)
         @ability_desc_font.draw_with_linebreaks(ability.desc(@player, @enemy), @battle_yml['abilities']['desc']['x']+8, @battle_yml['abilities']['desc']['y']+32, 3, 1, 1, @battle_yml['abilities']['desc']['font']['color'].to_i(16))
       end
+    end
+  end
+  
+  def button_press_over_id(id, button_id)
+    case button_id
+      when Gosu::Button::MsLeft
+        if @player != nil and @enemy != nil then
+          case id
+            when 'ability_button1'
+              take_turn(@player.abilities[0])
+            when 'ability_button2'
+              take_turn(@player.abilities[1])
+            when 'ability_button3'
+              take_turn(@player.abilities[2])
+            when 'ability_button4'
+              take_turn(@player.abilities[3])
+          end
+        end
+    end
+  end
+  
+  def button_down(id)
+    @current_boxes_under_mouse.each do |box_id|
+      button_press_over_id(box_id, id)
     end
   end
 end
