@@ -19,11 +19,6 @@ module Abilities
     
     def self.script(player, enemy)
       player.heal(get_heal_amount(player))
-      #heal_amount = get_heal_amount(player)
-      #if heal_amount + player['health'] >= player.get_max_health() then
-        #heal_amount = player.get_max_health() - player['health']
-      #end
-      #player['health'] += heal_amount
     end
     
     def self.get_heal_amount(player)

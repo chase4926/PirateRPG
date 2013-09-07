@@ -16,11 +16,12 @@ end
 
 
 class Battler
-  attr_accessor :stats
+  attr_accessor :stats, :combat_messages
   attr_reader :abilities
   def initialize()
     @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
     @abilities = Array.new() #Array to hold abilities
+    @combat_messages = Array.new()
     @dots = {:fire => []} # Damage Over Time
   end
   
@@ -58,12 +59,26 @@ class Battler
     end
   end
   
+  def add_combat_message(text, color='ffffff')
+    @combat_messages << [text, color, 0]
+  end
+  
+  def update_combat_messages()
+    # Increase tick
+    @combat_messages.each(){|i| i[2] += 1}
+    # Delete expired
+    @combat_messages.delete_if(){|i| i[2] >= 60}
+    # Sort the remaining by tick
+    @combat_messages.sort_by!(){|i| i[2]}
+  end
+  
   def hurt(amount)
     if self['health'] - amount <= 0 then
       self['health'] = 0
     else
       self['health'] -= amount
     end
+    add_combat_message("-#{amount}", 'ff0000')
   end
   
   def heal(amount)
@@ -72,6 +87,7 @@ class Battler
     else
       self['health'] += amount
     end
+    add_combat_message("+#{amount}", '00ff00')
   end
   
   # Conveinance methods
@@ -86,20 +102,22 @@ class Battler
   def get_max_health()
     return Stats.get_max_health(self['vitality'])
   end
+  
+  def get_crit_chance()
+    return Stats.get_crit_chance(self['precision'])
+  end
 end
 
 
 class Ability
   private_class_method :new
   
-  # weapon:
-  # title, desc, damage minimum, damage maximum, fire_damage, armor_pierce
+  # Create the ability from weapon data
   def self.from_weapon(weapon_data)
     return new(weapon_data)
   end
   
-  # abilites:
-  # attach a script
+  # Create the ability from a script
   def self.from_script(script_name)
     return new(:script => Abilities.const_get(script_name))
   end
@@ -122,7 +140,7 @@ class Ability
     end
   end
   
-  def full_name(*args) # The name is the full name for a weapon, and normally the same for a script aswell
+  def full_name(*args) # The full name for a weapon, and normally the same as a script's title
     if is_script?() then
       # Check if it responds to full_name(), and if so, return that
       if @vars[:script].respond_to?(:full_name) then
@@ -165,7 +183,7 @@ class Ability
       # Power implementation
       damage += player['power']
       # Precision implementation
-      if Stats.get_crit_chance(player['precision']) >= ((rand(1001) + 1) / 10.0) then
+      if player.get_crit_chance() >= ((rand(1001) + 1) / 10.0) then
         damage *= 2
       end
       # Fire implementation
@@ -195,6 +213,8 @@ class Battle < ControllerObject
     @health_bar_image = Media::get_image(@battle_yml['healthbar']['background_image'])
     # Status indicators
     @status_font = Res::Font[@battle_yml['status_indicator']['font']['name'], @battle_yml['status_indicator']['font']['size']]
+    # Combat Messages
+    @combat_message_font = Res::Font[@battle_yml['combat_messages']['font']['name'], @battle_yml['combat_messages']['font']['size']]
     # Abilities
     @ability_font = Res::Font[@battle_yml['abilities']['font']['name'], @battle_yml['abilities']['font']['size']]
     @ability_desc_font = Res::Font[@battle_yml['abilities']['desc']['font']['name'], @battle_yml['abilities']['desc']['font']['size']]
@@ -250,6 +270,8 @@ class Battle < ControllerObject
         @turn_timer = 0
       end
     end
+    @player.update_combat_messages()
+    @enemy.update_combat_messages()
   end
   
   def player_can_take_turn?()
@@ -265,6 +287,16 @@ class Battle < ControllerObject
     ability.use(@player, @enemy)
     @player.pass_turn()
     @turn_timer = 1
+  end
+  
+  def draw_combat_messages(battler, x, y)
+    result = String.new()
+    battler.combat_messages.each() do |text, color, i|
+      result << "<c=#{color}>#{text}</c>\n"
+    end
+    if result.length() > 0 then
+      @combat_message_font.draw_with_linebreaks(result, x, y - (battler.combat_messages[0][2] * 2), 5, 1, 1, Gosu::Color.argb(255-((255*battler.combat_messages[0][2])/60.0).round(), 255, 255, 255))
+    end
   end
   
   def draw_box(box, z=2)
@@ -294,6 +326,8 @@ class Battle < ControllerObject
         Media::get_image(@battle_yml['player']['fire_indicator']['image']).draw(@battle_yml['player']['fire_indicator']['x'], @battle_yml['player']['fire_indicator']['y'], 1)
         @status_font.draw(@player.get_dot(:fire)[1], @battle_yml['player']['fire_indicator']['x'] + Media::get_image(@battle_yml['player']['fire_indicator']['image']).width() + 4, @battle_yml['player']['fire_indicator']['y'], 1)
       end
+      #   combat messages
+      draw_combat_messages(@player, @battle_yml['player']['combat_messages']['x'], @battle_yml['player']['combat_messages']['y'])
       # Enemy
       #   health bar
       @health_bar_image.draw(@battle_yml['enemy']['health']['x'], @battle_yml['enemy']['health']['y'], 2)
@@ -308,6 +342,8 @@ class Battle < ControllerObject
         Media::get_image(@battle_yml['enemy']['fire_indicator']['image']).draw(@battle_yml['enemy']['fire_indicator']['x'], @battle_yml['enemy']['fire_indicator']['y'], 1)
         @status_font.draw(@enemy.get_dot(:fire)[1], @battle_yml['enemy']['fire_indicator']['x'] + Media::get_image(@battle_yml['enemy']['fire_indicator']['image']).width() + 4, @battle_yml['enemy']['fire_indicator']['y'], 1)
       end
+      #   combat messages
+      draw_combat_messages(@enemy, @battle_yml['enemy']['combat_messages']['x'], @battle_yml['enemy']['combat_messages']['y'])
       
       #Ability buttons
       # Ability 1
