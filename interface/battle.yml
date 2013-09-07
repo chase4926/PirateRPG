@@ -3,6 +3,10 @@ nametag:
   font:
     name: Batang
     size: 30
+status_indicator:
+  font:
+    name: Arial
+    size: 32
 abilities:
   font:
     name: Arial
@@ -29,10 +33,15 @@ abilities:
     image: battle/description_background.png
     x: 900
     y: 462
+healthbar:
+  background_image: battle/health_background.png
+  color: '0xff660000'
+  font:
+    name: Arial
+    size: 24
+    color: '0xffffffff'
 player:
   health:
-    background_image: battle/health_background.png
-    color: '0xff660000'
     x: 912
     y: 48
   nametag:
@@ -41,10 +50,12 @@ player:
   image:
     x: 976
     y: 128
+  fire_indicator:
+    image: battle/fire_icon.png
+    x: 816
+    y: 48
 enemy:
   health:
-    background_image: battle/health_background.png
-    color: '0xff660000'
     x: 112
     y: 48
   nametag:
@@ -53,3 +64,7 @@ enemy:
   image:
     x: 176
     y: 128
+  fire_indicator:
+    image: battle/fire_icon.png
+    x: 16
+    y: 48
