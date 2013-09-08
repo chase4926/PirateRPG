@@ -68,9 +68,12 @@ module Abilities
     end
     
     def self.script(player, enemy)
-      enemy.hurt(((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round)
+      damagenum = ((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round
+      if(damagenum >= 0) then
+        enemy.hurt(damagenum)
+      end
       if(rand(2) == 0)  then
-        enemy.stun();
+        enemy.stun()
       end
     end
     
