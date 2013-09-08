@@ -46,7 +46,7 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Rests for a turn, restoring <c=a210ff>30</c> \nfatigue."
+      return "Rests for a turn, \nrestoring <c=a210ff>30</c> fatigue."
     end
     
     def self.script(player, enemy)
@@ -69,7 +69,9 @@ module Abilities
     
     def self.script(player, enemy)
       enemy.hurt(((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round)
-      #Note: Put 50% stun chance here
+      if(rand(2) == 0)  then
+        enemy.stun();
+      end
     end
     
     def self.fatigue_required()
