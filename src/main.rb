@@ -34,7 +34,7 @@ require 'abilities.rb'
 
 $VERBOSE = true
 
-srand()
+srand(Time.now().to_i())
 
 
 Res::Vars.load('../config.yml')

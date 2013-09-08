@@ -37,6 +37,12 @@ abilities:
     image: battle/description_background.png
     x: 900
     y: 462
+status_messages:
+  font:
+    name: Arial
+    size: 32
+  x: 488
+  y: 422
 fatiguebar:
   background_image: battle/fatigue_background.png
   color: '0xff600066'

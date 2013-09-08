@@ -150,6 +150,14 @@ class Ability
     return @vars[:script] != nil
   end
   
+  def enough_fatigue?(player)
+    if is_script?() then
+      return player.fatigue >= @vars[:script].fatigue_required()
+    else
+      return true
+    end
+  end
+  
   def title(*args) # The title is short-form for the ability's name
     if is_script?() then
       # It's an ability, return ability name
@@ -177,7 +185,9 @@ class Ability
   def desc(player, enemy)
     if is_script?() then
       # It's an ability, return ability description
-      return @vars[:script].desc(player, enemy)
+      result = @vars[:script].desc(player, enemy)
+      result << "\nFatigue required: <c=ffa210ff>#{@vars[:script].fatigue_required()}</c>"
+      return result
     else
       # It's a weapon, return weapon description
       result = String.new(@vars[:desc])
@@ -195,7 +205,10 @@ class Ability
   def use(player, enemy)
     if is_script?() then
       # It's an ability, just use the script provided
-      @vars[:script].script(player, enemy)
+      if enough_fatigue?(player) then
+        player.lower_fatigue(@vars[:script].fatigue_required())
+        @vars[:script].script(player, enemy)
+      end
     else
       # It's a weapon
       damage = @vars[:dam_min] + rand(@vars[:dam_max] - @vars[:dam_min] + 1)
@@ -241,6 +254,8 @@ class Battle < ControllerObject
     @health_bar_image = Media::get_image(@battle_yml['healthbar']['background_image'])
     # Status indicators
     @status_font = Res::Font[@battle_yml['status_indicator']['font']['name'], @battle_yml['status_indicator']['font']['size']]
+    @status_message_font = Res::Font[@battle_yml['status_messages']['font']['name'], @battle_yml['status_messages']['font']['size']]
+    @status_messages = Array.new()
     # Combat Messages
     @combat_message_font = Res::Font[@battle_yml['combat_messages']['font']['name'], @battle_yml['combat_messages']['font']['size']]
     # Abilities
@@ -281,6 +296,19 @@ class Battle < ControllerObject
     @enemy = enemy
   end
   
+  def add_status_message(text, color='ffffff')
+    @status_messages << [text, color, 0]
+  end
+  
+  def update_status_messages()
+    # Increase tick
+    @status_messages.each(){|i| i[2] += 1}
+    # Delete expired
+    @status_messages.delete_if(){|i| i[2] >= 60}
+    # Sort the remaining by tick
+    @status_messages.sort_by!(){|i| i[2]}
+  end
+  
   def update()
     @current_boxes_under_mouse = @box_manager.hit_test_boxes(@window.relative_mouse_x, @window.relative_mouse_y)
     
@@ -300,6 +328,7 @@ class Battle < ControllerObject
     end
     @player.update_combat_messages()
     @enemy.update_combat_messages()
+    update_status_messages()
   end
   
   def player_can_take_turn?()
@@ -315,6 +344,14 @@ class Battle < ControllerObject
     ability.use(@player, @enemy)
     @player.pass_turn()
     @turn_timer = 1
+  end
+  
+  def draw_status_messages(x, y)
+    result = String.new()
+    @status_messages.each_with_index() do |item, index|
+      text, color, i = item
+      @status_message_font.draw("<c=#{color}>#{text}</c>", x, y - (@combat_message_font.height()*index), 5, 1, 1, Gosu::Color.argb(255-((255*i)/60.0).round(), 255, 255, 255))
+    end
   end
   
   def draw_combat_messages(battler, x, y)
@@ -373,6 +410,9 @@ class Battle < ControllerObject
       #   combat messages
       draw_combat_messages(@enemy, @battle_yml['enemy']['combat_messages']['x'], @battle_yml['enemy']['combat_messages']['y'])
       
+      # Status messages
+      draw_status_messages(@battle_yml['status_messages']['x'], @battle_yml['status_messages']['y'])
+      
       # Fatigue bar
       @fatigue_bar_image.draw(@battle_yml['fatiguebar']['x'], @battle_yml['fatiguebar']['y'], 2)
       fatigue_height = ((@fatigue_bar_image.height() * @player.fatigue)/100.0).round()
@@ -417,13 +457,29 @@ class Battle < ControllerObject
         if @player != nil and @enemy != nil and player_can_take_turn?() then
           case id
             when 'ability_button1'
-              take_player_turn(@player.abilities[0])
+              if @player.abilities[0].enough_fatigue?(@player) then
+                take_player_turn(@player.abilities[0])
+              else
+                add_status_message('Not enough fatigue!')
+              end
             when 'ability_button2'
-              take_player_turn(@player.abilities[1])
+              if @player.abilities[1].enough_fatigue?(@player) then
+                take_player_turn(@player.abilities[1])
+              else
+                add_status_message('Not enough fatigue!')
+              end
             when 'ability_button3'
-              take_player_turn(@player.abilities[2])
+              if @player.abilities[2].enough_fatigue?(@player) then
+                take_player_turn(@player.abilities[2])
+              else
+                add_status_message('Not enough fatigue!')
+              end
             when 'ability_button4'
-              take_player_turn(@player.abilities[3])
+              if @player.abilities[3].enough_fatigue?(@player) then
+                take_player_turn(@player.abilities[3])
+              else
+                add_status_message('Not enough fatigue!')
+              end
           end
         end
     end

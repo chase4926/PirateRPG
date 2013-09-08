@@ -117,6 +117,10 @@ module Abilities
       damage = Range.new(enemy['power'] - (enemy['power'] / 4.0).round(), enemy['power'] + (enemy['power'] / 4.0).round()).to_a().shuffle().pop()
       player.hurt(damage - player['armor'] <= 0 ? 0 : damage - player['armor'])
     end
+    
+    def self.fatigue_required()
+      return 0
+    end
   end
 end
 
