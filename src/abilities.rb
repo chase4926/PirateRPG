@@ -4,13 +4,49 @@
 
 module Abilities
   # Player abilities
+    module Leap
+    def self.title()
+      return 'Leap'
+    end
+    
+    def self.desc(player, enemy)
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{((player['power'] - enemy['armor']) * (player['armor'] + 1))} </c>damage."
+    end
+    
+    def self.script(player, enemy)
+      enemy.hurt((player['power'] - enemy['armor']) * (player['armor'] + 1))
+    end
+    
+    def self.fatigue_required()
+      return 30
+    end
+  end
+  
+  module Rotato
+    def self.title()
+      return 'Rotato'
+    end
+    
+    def self.desc(player, enemy)
+      return "Spins around at the enemy, \ndealing <c=ff4d4d>#{((player['power'] * player['precision']) / (enemy['armor'] + 1))} </c>damage."
+    end
+    
+    def self.script(player, enemy)
+      enemy.hurt((player['power'] * player['precision']) / (enemy['armor'] + 1))
+    end
+    
+    def self.fatigue_required()
+      return 50
+    end
+  end
+  
   module Cooldown
     def self.title()
       return 'Cooldown'
     end
     
     def self.desc(player, enemy)
-      return "Rests for a turn, regaining <c=004bff>30</c> fatigue."
+      return "Rests for a turn, restoring <c=a210ff>30</c> \nfatigue."
     end
     
     def self.script(player, enemy)
@@ -37,16 +73,11 @@ module Abilities
     end
     
     def self.fatigue_required()
-      return 0
+      return 20
     end
   end
-  
-<<<<<<< HEAD
 	
   module Heal 
-=======
-  module Heal
->>>>>>> 4c7e2381b85d934baf93506eab60cfcfc46066a3
     def self.title()
       return 'Heal'
     end
