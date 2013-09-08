@@ -183,7 +183,7 @@ class Menu < ControllerObject
           when 0 # Main menu
             case id
               when 'new_game'
-                #TEMPORARY: Switch to the battle screen
+                #FIXME: this is temporary- Switch to the battle screen
                 push_event(:change_phase, 1)
               #when 'load_game'
               when 'options'

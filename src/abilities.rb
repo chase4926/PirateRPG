@@ -4,17 +4,21 @@
 
 module Abilities
   # Player abilities
-    module Leap
+  module Leap
     def self.title()
       return 'Leap'
     end
     
     def self.desc(player, enemy)
-      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{((player['power'] - enemy['armor']) * (player['armor'] + 1))} </c>damage."
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt((player['power'] - enemy['armor']) * (player['armor'] + 1))
+      enemy.hurt(self.get_damage_amount())
+    end
+    
+    def self.get_damage_amount()
+      return (player['power'] - enemy['armor']) * (player['armor'] + 1)
     end
     
     def self.fatigue_required()
@@ -28,11 +32,15 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Spins around at the enemy, \ndealing <c=ff4d4d>#{((player['power'] * player['precision']) / (enemy['armor'] + 1))} </c>damage."
+      return "Spins around at the enemy,\ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt((player['power'] * player['precision']) / (enemy['armor'] + 1))
+      enemy.hurt(self.get_damage_amount())
+    end
+    
+    def self.get_damage_amount()
+      return (player['power'] * player['precision']) / (enemy['armor'] + 1)
     end
     
     def self.fatigue_required()
@@ -64,13 +72,15 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Bashes the opponenent, \ndealing damage if your armor \nis higher than the opponent \nand has a chance to stun."
+      return "Bashes the opponenent,\ndealing damage if your armor\nis higher than the opponent\nand has a chance to stun."
     end
     
     def self.script(player, enemy)
       damagenum = ((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round
       if(damagenum >= 0) then
         enemy.hurt(damagenum)
+      else
+        enemy.hurt(0)
       end
       if(rand(2) == 0)  then
         enemy.stun()
@@ -92,11 +102,11 @@ module Abilities
     #end
     
     def self.desc(player, enemy)
-      return "Restores <c=00ff00>#{get_heal_amount(player)}</c> health."
+      return "Restores <c=00ff00>#{self.get_heal_amount(player)}</c> health."
     end
     
     def self.script(player, enemy)
-      player.heal(get_heal_amount(player))
+      player.heal(self.get_heal_amount(player))
     end
     
     def self.get_heal_amount(player)
@@ -119,7 +129,7 @@ module Abilities
     end
     
     def self.script(player, enemy)
-      damage = Range.new(enemy['power'] - (enemy['power'] / 4.0).round(), enemy['power'] + (enemy['power'] / 4.0).round()).to_a().shuffle().pop()
+      damage = Range.new(enemy['power'] - (enemy['power'] / 4.0).round(), enemy['power'] + (enemy['power'] / 4.0).round()).to_a().sample()
       player.hurt(damage - player['armor'] <= 0 ? 0 : damage - player['armor'])
       if rand(10) == 0 then
         player.stun()

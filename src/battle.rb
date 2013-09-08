@@ -15,6 +15,38 @@ module Stats
 end
 
 
+class Floating_Messages
+  attr_reader :font
+  def initialize(font=nil)
+    @font = font
+    @messages = Array.new()
+  end
+  
+  def add_message(text, color='ffffff')
+    @messages << [text, color, 0]
+  end
+  
+  def update()
+    # Increase tick
+    @messages.each(){|i| i[2] += 1}
+    # Delete expired
+    @messages.delete_if(){|i| i[2] >= 60}
+    # Sort the remaining by tick
+    @messages.sort_by!(){|i| i[2]}
+  end
+  
+  def [](index)
+    return @messages[index]
+  end
+  
+  def each(&block)
+    @messages.each_with_index() do |item, index|
+      block.call(item, index)
+    end
+  end
+end
+
+
 class Battler
   attr_accessor :stats, :combat_messages, :fatigue, :stunned
   attr_reader :abilities
@@ -22,7 +54,7 @@ class Battler
     @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
     @fatigue = 100
     @abilities = Array.new() #Array to hold abilities
-    @combat_messages = Array.new()
+    @combat_messages = Floating_Messages.new(Res::Font[Res::YML['../interface/battle.yml']['combat_messages']['font']['name'], Res::YML['../interface/battle.yml']['combat_messages']['font']['size']])
     @dots = {:fire => []} # Damage Over Time
     @stunned = false
   end
@@ -67,26 +99,13 @@ class Battler
     end
   end
   
-  def add_combat_message(text, color='ffffff')
-    @combat_messages << [text, color, 0]
-  end
-  
-  def update_combat_messages()
-    # Increase tick
-    @combat_messages.each(){|i| i[2] += 1}
-    # Delete expired
-    @combat_messages.delete_if(){|i| i[2] >= 60}
-    # Sort the remaining by tick
-    @combat_messages.sort_by!(){|i| i[2]}
-  end
-  
   def hurt(amount, color='ff0000')
     if self['health'] - amount <= 0 then
       self['health'] = 0
     else
       self['health'] -= amount
     end
-    add_combat_message("-#{amount}", color)
+    @combat_messages.add_message("-#{amount}", color)
   end
   
   def heal(amount, color='00ff00')
@@ -95,7 +114,7 @@ class Battler
     else
       self['health'] += amount
     end
-    add_combat_message("+#{amount}", color)
+    @combat_messages.add_message("+#{amount}", color)
   end
   
   # Conveinance methods
@@ -124,8 +143,8 @@ class Battler
   end
   
   def stun()
-    add_combat_message('Stunned!', '0000ff')
     @stunned = true
+    @combat_messages.add_message('Stunned!', '0000ff')
   end
   
   def unstun()
@@ -271,10 +290,7 @@ class Battle < ControllerObject
     @health_bar_image = Media::get_image(@battle_yml['healthbar']['background_image'])
     # Status indicators
     @status_font = Res::Font[@battle_yml['status_indicator']['font']['name'], @battle_yml['status_indicator']['font']['size']]
-    @status_message_font = Res::Font[@battle_yml['status_messages']['font']['name'], @battle_yml['status_messages']['font']['size']]
-    @status_messages = Array.new()
-    # Combat Messages
-    @combat_message_font = Res::Font[@battle_yml['combat_messages']['font']['name'], @battle_yml['combat_messages']['font']['size']]
+    @status_messages = Floating_Messages.new(Res::Font[@battle_yml['status_messages']['font']['name'], @battle_yml['status_messages']['font']['size']])
     # Abilities
     @ability_font = Res::Font[@battle_yml['abilities']['font']['name'], @battle_yml['abilities']['font']['size']]
     @ability_desc_font = Res::Font[@battle_yml['abilities']['desc']['font']['name'], @battle_yml['abilities']['desc']['font']['size']]
@@ -313,19 +329,6 @@ class Battle < ControllerObject
     @enemy = enemy
   end
   
-  def add_status_message(text, color='ffffff')
-    @status_messages << [text, color, 0]
-  end
-  
-  def update_status_messages()
-    # Increase tick
-    @status_messages.each(){|i| i[2] += 1}
-    # Delete expired
-    @status_messages.delete_if(){|i| i[2] >= 60}
-    # Sort the remaining by tick
-    @status_messages.sort_by!(){|i| i[2]}
-  end
-  
   def update()
     @current_boxes_under_mouse = @box_manager.hit_test_boxes(@window.relative_mouse_x, @window.relative_mouse_y)
     
@@ -349,9 +352,9 @@ class Battle < ControllerObject
         end
       end
     end
-    @player.update_combat_messages()
-    @enemy.update_combat_messages()
-    update_status_messages()
+    @player.combat_messages.update()
+    @enemy.combat_messages.update()
+    @status_messages.update()
   end
   
   def player_can_take_turn?()
@@ -369,20 +372,20 @@ class Battle < ControllerObject
   end
   
   def draw_status_messages(x, y)
-    result = String.new()
-    @status_messages.each_with_index() do |item, index|
+    @status_messages.each() do |item, index|
       text, color, i = item
-      @status_message_font.draw("<c=#{color}>#{text}</c>", x, y - (@combat_message_font.height()*index), 5, 1, 1, Gosu::Color.argb(255-((255*i)/60.0).round(), 255, 255, 255))
+      @status_messages.font.draw("<c=#{color}>#{text}</c>", x, y - (@combat_message_font.height()*index), 5, 1, 1, Gosu::Color.argb(255-((255*i)/60.0).round(), 255, 255, 255))
     end
   end
   
   def draw_combat_messages(battler, x, y)
     result = String.new()
-    battler.combat_messages.each() do |text, color, i|
+    battler.combat_messages.each() do |item, index|
+      text, color, i = item
       result << "<c=#{color}>#{text}</c>\n"
     end
     if result.length() > 0 then
-      @combat_message_font.draw_with_linebreaks(result, x, y - (battler.combat_messages[0][2] * 2), 5, 1, 1, Gosu::Color.argb(255-((255*battler.combat_messages[0][2])/60.0).round(), 255, 255, 255))
+      battler.combat_messages.font.draw_with_linebreaks(result, x, y - (battler.combat_messages[0][2] * 2), 5, 1, 1, Gosu::Color.argb(255-((255*battler.combat_messages[0][2])/60.0).round(), 255, 255, 255))
     end
   end
   
@@ -482,25 +485,25 @@ class Battle < ControllerObject
               if @player.abilities[0].enough_fatigue?(@player) then
                 take_player_turn(@player.abilities[0])
               else
-                add_status_message('Not enough fatigue!')
+                @status_messages.add_message('Not enough fatigue!')
               end
             when 'ability_button2'
               if @player.abilities[1].enough_fatigue?(@player) then
                 take_player_turn(@player.abilities[1])
               else
-                add_status_message('Not enough fatigue!')
+                @status_messages.add_message('Not enough fatigue!')
               end
             when 'ability_button3'
               if @player.abilities[2].enough_fatigue?(@player) then
                 take_player_turn(@player.abilities[2])
               else
-                add_status_message('Not enough fatigue!')
+                @status_messages.add_message('Not enough fatigue!')
               end
             when 'ability_button4'
               if @player.abilities[3].enough_fatigue?(@player) then
                 take_player_turn(@player.abilities[3])
               else
-                add_status_message('Not enough fatigue!')
+                @status_messages.add_message('Not enough fatigue!')
               end
           end
         end
