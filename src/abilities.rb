@@ -32,9 +32,9 @@ module Abilities
 			#Note: Put 50% stun chance here
     end
   end
+  
 	
-	
-  module Heal
+  module Heal 
     def self.title()
       return 'Heal'
     end

@@ -4,7 +4,7 @@ Note:
   Stories are subject to change
 
 
-# Tutorial Island #
+# "Tutorial Island" #
   You are stranded on the starting island, goal is to get enough money to buy a ship
   Upon entering the game, you are outside in the town, and the NPCs will give you tutorial messages
   Upon reaching a certain level, tutorial messages will change into generic dialogue
