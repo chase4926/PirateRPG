@@ -24,4 +24,14 @@ Note:
 	Clues related to commodity pricing
 	Darker Colours
 	
+# "Seperationalist Island" #
+	Everyone on the island are the younger generation of people who were shipwrecked
+	None of the inhabitants can leave because the evil faction is surrounding the island
+	The evil factions don't want to leave the island due to their reason of splitting
+	There are two factions which were created when there was an issue with the shipwrecked people
+	One faction is friendly to the player, the other one guards treasure chests and is hostile
+	The evil faction is located towards the outside of the island
+	The player can unearth what happened by talking to NPCs hidden around and combining the stories
+	The shopkeepers are closer to the center of the island, and have higher prices due to difficulty to trade
 	
+		## Story of faction splitting ##

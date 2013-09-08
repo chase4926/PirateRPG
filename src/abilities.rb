@@ -4,6 +4,36 @@
 
 module Abilities
   # Player abilities
+		 module Cooldown
+    def self.title()
+      return 'Cooldown'
+    end
+    
+    def self.desc(player, enemy)
+			return "Rests for a turn, regaining <c=004bff> 30 </c> fatigue."
+    end
+    
+    def self.script(player, enemy)
+      regain_fatigue(30)
+    end
+  end
+	
+	 module Bash
+    def self.title()
+      return 'Bash'
+    end
+    
+    def self.desc(player, enemy)
+			return "Bashes the opponenent, \ndealing damage if your armor \nis higher than the opponent \nand has a chance to stun."
+    end
+    
+    def self.script(player, enemy)
+      enemy.hurt(((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round)
+			#Note: Put 50% stun chance here
+    end
+  end
+	
+	
   module Heal
     def self.title()
       return 'Heal'
