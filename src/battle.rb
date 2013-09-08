@@ -16,7 +16,7 @@ end
 
 
 class Battler
-  attr_accessor :stats, :combat_messages, :fatigue
+  attr_accessor :stats, :combat_messages, :fatigue, :stunned
   attr_reader :abilities
   def initialize()
     @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
@@ -24,6 +24,7 @@ class Battler
     @abilities = Array.new() #Array to hold abilities
     @combat_messages = Array.new()
     @dots = {:fire => []} # Damage Over Time
+    @stunned = false
   end
   
   def pass_turn()
@@ -44,6 +45,9 @@ class Battler
     
     # Regain fatigue
     regain_fatigue(10)
+    
+    # Unstun self
+    unstun()
   end
   
   def get_dot(key)
@@ -117,6 +121,19 @@ class Battler
     else
       @fatigue += amount
     end
+  end
+  
+  def stun()
+    add_combat_message('Stunned!', '0000ff')
+    @stunned = true
+  end
+  
+  def unstun()
+    @stunned = false
+  end
+  
+  def stunned?()
+    return @stunned
   end
   
   def get_max_health()
@@ -317,13 +334,19 @@ class Battle < ControllerObject
       if @turn_timer > 60 then
         @current_turn = 'enemy'
         @turn_timer = 0
-        take_enemy_turn()
+        take_enemy_turn() unless @enemy.stunned?()
+        @enemy.pass_turn()
       end
     else
       @turn_timer += 1
       if @turn_timer > 60 then
         @current_turn = 'player'
-        @turn_timer = 0
+        if @player.stunned?() then
+          @player.pass_turn()
+          @turn_timer = 1
+        else
+          @turn_timer = 0
+        end
       end
     end
     @player.update_combat_messages()
@@ -337,7 +360,6 @@ class Battle < ControllerObject
   
   def take_enemy_turn()
     @enemy.abilities[rand(@enemy.abilities.count())].use(@player, @enemy)
-    @enemy.pass_turn()
   end
   
   def take_player_turn(ability)

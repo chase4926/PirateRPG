@@ -118,6 +118,9 @@ module Abilities
     def self.script(player, enemy)
       damage = Range.new(enemy['power'] - (enemy['power'] / 4.0).round(), enemy['power'] + (enemy['power'] / 4.0).round()).to_a().shuffle().pop()
       player.hurt(damage - player['armor'] <= 0 ? 0 : damage - player['armor'])
+      if rand(10) == 0 then
+        player.stun()
+      end
     end
     
     def self.fatigue_required()
