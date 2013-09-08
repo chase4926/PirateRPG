@@ -16,10 +16,11 @@ end
 
 
 class Battler
-  attr_accessor :stats, :combat_messages
+  attr_accessor :stats, :combat_messages, :fatigue
   attr_reader :abilities
   def initialize()
     @stats = {'name'=> '', 'vitality' => 1, 'precision' => 0, 'power' => 0, 'armor' => 0, 'health' => 10}
+    @fatigue = 100
     @abilities = Array.new() #Array to hold abilities
     @combat_messages = Array.new()
     @dots = {:fire => []} # Damage Over Time
@@ -40,6 +41,9 @@ class Battler
     @dots.each_value() do |item|
       item.delete_if() {|i| i[1] <= 0}
     end
+    
+    # Regain fatigue
+    regain_fatigue(10)
   end
   
   def get_dot(key)
@@ -72,22 +76,22 @@ class Battler
     @combat_messages.sort_by!(){|i| i[2]}
   end
   
-  def hurt(amount)
+  def hurt(amount, color='ff0000')
     if self['health'] - amount <= 0 then
       self['health'] = 0
     else
       self['health'] -= amount
     end
-    add_combat_message("-#{amount}", 'ff0000')
+    add_combat_message("-#{amount}", color)
   end
   
-  def heal(amount)
+  def heal(amount, color='00ff00')
     if self['health'] + amount >= get_max_health() then
       self['health'] = get_max_health()
     else
       self['health'] += amount
     end
-    add_combat_message("+#{amount}", '00ff00')
+    add_combat_message("+#{amount}", color)
   end
   
   # Conveinance methods
@@ -97,6 +101,22 @@ class Battler
   
   def []=(key, value)
     @stats[key] = value
+  end
+  
+  def lower_fatigue(amount)
+    if @fatigue - amount <= 0 then
+      @fatigue = 0
+    else
+      @fatigue -= amount
+    end
+  end
+  
+  def regain_fatigue(amount)
+    if @fatigue + amount >= 100 then
+      @fatigue = 100
+    else
+      @fatigue += amount
+    end
   end
   
   def get_max_health()
@@ -183,14 +203,20 @@ class Ability
       # Power implementation
       damage += player['power']
       # Precision implementation
+      crit = false
       if player.get_crit_chance() >= ((rand(1001) + 1) / 10.0) then
         damage *= 2
+        crit = true
       end
       # Fire implementation
       if @vars[:fire_len] >= 1 then
         enemy.add_dot(:fire, @vars[:fire_dam], @vars[:fire_len])
       end
-      enemy.hurt(damage - armor <= 0 ? 0 : damage - armor)
+      if crit then
+        enemy.hurt(damage - armor <= 0 ? 0 : damage - armor, '0000ff')
+      else
+        enemy.hurt(damage - armor <= 0 ? 0 : damage - armor)
+      end
     end
   end
 end
@@ -207,6 +233,8 @@ class Battle < ControllerObject
     # Turns
     @current_turn = 'player'
     @turn_timer = 0
+    # Fatigue bar
+    @fatigue_bar_image = Media::get_image(@battle_yml['fatiguebar']['background_image'])
     # Health bars
     @nametag_font = Res::Font[@battle_yml['nametag']['font']['name'], @battle_yml['nametag']['font']['size']]
     @health_font = Res::Font[@battle_yml['healthbar']['font']['name'], @battle_yml['healthbar']['font']['size']]
@@ -345,20 +373,25 @@ class Battle < ControllerObject
       #   combat messages
       draw_combat_messages(@enemy, @battle_yml['enemy']['combat_messages']['x'], @battle_yml['enemy']['combat_messages']['y'])
       
-      #Ability buttons
-      # Ability 1
+      # Fatigue bar
+      @fatigue_bar_image.draw(@battle_yml['fatiguebar']['x'], @battle_yml['fatiguebar']['y'], 2)
+      fatigue_height = ((@fatigue_bar_image.height() * @player.fatigue)/100.0).round()
+      draw_square(@window, @battle_yml['fatiguebar']['x'], @battle_yml['fatiguebar']['y'] + @fatigue_bar_image.height() - fatigue_height, 1, @fatigue_bar_image.width(), fatigue_height, @battle_yml['fatiguebar']['color'].to_i(16))
+      
+      # Ability buttons
+      #   Ability 1
       box = @box_manager['ability_button1']
       draw_box(box)
       @ability_font.draw(@player.abilities[0].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[0].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
-      # Ability 2
+      #   Ability 2
       box = @box_manager['ability_button2']
       draw_box(box)
       @ability_font.draw(@player.abilities[1].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[1].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
-      # Ability 3
+      #   Ability 3
       box = @box_manager['ability_button3']
       draw_box(box)
       @ability_font.draw(@player.abilities[2].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[2].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))
-      # Ability 4
+      #   Ability 4
       box = @box_manager['ability_button4']
       draw_box(box)
       @ability_font.draw(@player.abilities[3].title(), box.x+((box.image.width()-@ability_font.text_width(@player.abilities[3].title()))/2.0), box.y+38, 2, 1, 1, @battle_yml['abilities']['font']['color'].to_i(16))

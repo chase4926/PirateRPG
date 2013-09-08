@@ -37,6 +37,11 @@ abilities:
     image: battle/description_background.png
     x: 900
     y: 462
+fatiguebar:
+  background_image: battle/fatigue_background.png
+  color: '0xff600066'
+  x: 312
+  y: 463
 healthbar:
   background_image: battle/health_background.png
   color: '0xff660000'
