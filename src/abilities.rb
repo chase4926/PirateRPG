@@ -16,6 +16,10 @@ module Abilities
     def self.script(player, enemy)
       player.regain_fatigue(30)
     end
+    
+    def self.fatigue_required()
+      return 0
+    end
   end
   
   module Bash
@@ -30,6 +34,10 @@ module Abilities
     def self.script(player, enemy)
       enemy.hurt(((rand((player['armor'] - enemy['armor']) / 2.5) - rand((player['armor'] - enemy['armor']) / 5)) + (player['armor'] - enemy['armor'])).round)
       #Note: Put 50% stun chance here
+    end
+    
+    def self.fatigue_required()
+      return 0
     end
   end
   
@@ -52,6 +60,10 @@ module Abilities
     
     def self.get_heal_amount(player)
       return (player.get_max_health() * 0.25).round()
+    end
+    
+    def self.fatigue_required()
+      return 30
     end
   end
   
