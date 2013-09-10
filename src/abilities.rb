@@ -32,7 +32,7 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player)}</c> damage."
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
     end
     
     def self.script(player, enemy)
