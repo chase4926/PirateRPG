@@ -4,20 +4,42 @@
 
 module Abilities
   # Player abilities
+  module Charge
+    def self.title()
+      return 'Charge'
+    end
+    #Charges the enemy, having a (25)% chance of stunning the enemy, preventing its next attack and dealing ((power * 2) - armor) damage
+    def self.desc(player, enemy)
+      return "Charges on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage. \nHas a <c=daa520>25%</c> chance to stun the enemy"
+    end
+    
+    def self.script(player, enemy)
+      enemy.hurt(self.get_damage_amount(player, enemy))
+    end
+    
+    def self.get_damage_amount(player, enemy)
+      return (player['power'] - enemy['armor']) * (player['armor'] + 1)
+    end
+    
+    def self.fatigue_required()
+      return 30
+    end
+  end
+
   module Leap
     def self.title()
       return 'Leap'
     end
     
     def self.desc(player, enemy)
-      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player)}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt(self.get_damage_amount())
+      enemy.hurt(self.get_damage_amount(player, enemy))
     end
     
-    def self.get_damage_amount()
+    def self.get_damage_amount(player, enemy)
       return (player['power'] - enemy['armor']) * (player['armor'] + 1)
     end
     
@@ -32,14 +54,14 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Spins around at the enemy,\ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
+      return "Spins around at the enemy,\ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt(self.get_damage_amount())
+      enemy.hurt(self.get_damage_amount(player, enemy))
     end
     
-    def self.get_damage_amount()
+    def self.get_damage_amount(player, enemy)
       return (player['power'] * player['precision']) / (enemy['armor'] + 1)
     end
     
@@ -72,7 +94,7 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Bashes the opponenent,\ndealing damage if your armor\nis higher than the opponent\nand has a chance to stun."
+      return "Bashes the opponenent,\ndealing damage if your armor\nis higher than the opponent\nand has a <c=daa520>50%</c> chance to stun."
     end
     
     def self.script(player, enemy)
