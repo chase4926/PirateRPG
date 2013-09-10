@@ -332,29 +332,31 @@ class Battle < ControllerObject
   def update()
     @current_boxes_under_mouse = @box_manager.hit_test_boxes(@window.relative_mouse_x, @window.relative_mouse_y)
     
-    if @current_turn == 'player' then
-      @turn_timer += 1 if @turn_timer > 0
-      if @turn_timer > 60 then
-        @current_turn = 'enemy'
-        @turn_timer = 0
-        take_enemy_turn() unless @enemy.stunned?()
-        @enemy.pass_turn()
-      end
-    else
-      @turn_timer += 1
-      if @turn_timer > 60 then
-        @current_turn = 'player'
-        if @player.stunned?() then
-          @player.pass_turn()
-          @turn_timer = 1
-        else
+    if @player != nil and @enemy != nil then
+      if @current_turn == 'player' then
+        @turn_timer += 1 if @turn_timer > 0
+        if @turn_timer > 60 then
+          @current_turn = 'enemy'
           @turn_timer = 0
+          take_enemy_turn() unless @enemy.stunned?()
+          @enemy.pass_turn()
+        end
+      else
+        @turn_timer += 1
+        if @turn_timer > 60 then
+          @current_turn = 'player'
+          if @player.stunned?() then
+            @player.pass_turn()
+            @turn_timer = 1
+          else
+            @turn_timer = 0
+          end
         end
       end
+      @player.combat_messages.update()
+      @enemy.combat_messages.update()
+      @status_messages.update()
     end
-    @player.combat_messages.update()
-    @enemy.combat_messages.update()
-    @status_messages.update()
   end
   
   def player_can_take_turn?()

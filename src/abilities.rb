@@ -10,14 +10,14 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt(self.get_damage_amount())
+      enemy.hurt(self.get_damage_amount(player, enemy))
     end
     
-    def self.get_damage_amount()
+    def self.get_damage_amount(player, enemy)
       return (player['power'] - enemy['armor']) * (player['armor'] + 1)
     end
     
@@ -32,14 +32,14 @@ module Abilities
     end
     
     def self.desc(player, enemy)
-      return "Spins around at the enemy,\ndealing <c=ff4d4d>#{self.get_damage_amount()}</c> damage."
+      return "Spins around at the enemy,\ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
     end
     
     def self.script(player, enemy)
-      enemy.hurt(self.get_damage_amount())
+      enemy.hurt(self.get_damage_amount(player, enemy))
     end
     
-    def self.get_damage_amount()
+    def self.get_damage_amount(player, enemy)
       return (player['power'] * player['precision']) / (enemy['armor'] + 1)
     end
     
