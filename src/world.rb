@@ -8,8 +8,9 @@ class World < ControllerObject
     @window = window
     
     # Test code below, this would never be here
-    @size = [100, 100]
-    @world_image = generate_world()
+    @size = [128, 128]
+    @world_image0 = generate_world(0)
+    @world_image1 = generate_world(1)
     @translate_x = 0
     @translate_y = 0
     #@player = Player.new()
@@ -19,13 +20,26 @@ class World < ControllerObject
     #push_event(:change_phase, 2)
   end
   
-  def generate_world()
-    return @window.record(@size[0]*32, @size[1]*32) do
-      @size[1].times() do |y|
-        @size[0].times() do |x|
-          Media::get_image("world/#{rand(5)+1}.png").draw(x*32, y*32, 0)
+  def generate_world(layer)
+    case layer
+      when 0
+        return @window.record(@size[0]*32, @size[1]*32) do
+          @size[1].times() do |y|
+            @size[0].times() do |x|
+              Media::get_image("world/#{rand(3)+1}.png").draw(x*32, y*32, 0)
+            end
+          end
         end
-      end
+      when 1
+        return @window.record(@size[0]*32, @size[1]*32) do
+          @size[1].times() do |y|
+            @size[0].times() do |x|
+              if rand(5) == 0 then
+                Media::get_image("world/#{rand(2)+4}.png").draw(x*32, y*32, 0)
+              end
+            end
+          end
+        end
     end
   end
   
@@ -46,7 +60,8 @@ class World < ControllerObject
   
   def draw()
     @window.translate(-@translate_x, -@translate_y) do
-      @world_image.draw(0, 0, 0)
+      @world_image0.draw(0, 0, 0)
+      @world_image1.draw(0, 0, 1)
     end
   end
 end
