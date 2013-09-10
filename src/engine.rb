@@ -30,17 +30,8 @@ class Controller
     @window = window
     @phase = 0
     @menu = Menu.new(window)
+    @world = World.new(window)
     @battle = Battle.new(window)
-    
-    # Test code below, this would NEVER be in the Controller class
-    @player = Player.new()
-    @enemy = Enemy.new()
-    @battle.set_player(@player)
-    @battle.set_enemy(@enemy)
-  end
-  
-  def change_phase(new_phase)
-    @phase = new_phase
   end
   
   def current_objects()
@@ -48,6 +39,8 @@ class Controller
       when 0
         return [@menu]
       when 1
+        return [@world]
+      when 2
         return [@battle]
     end
   end
@@ -68,6 +61,20 @@ class Controller
   def button_down(id)
     current_objects().each() do |object|
       object.button_down(id)
+    end
+  end
+  
+  # Events
+  def change_phase(new_phase)
+    @phase = new_phase
+  end
+  
+  def set_battle(entity)
+    case entity.class().to_s()
+      when 'Player'
+        @battle.set_player(entity)
+      when 'Enemy'
+        @battle.set_enemy(entity)
     end
   end
 end

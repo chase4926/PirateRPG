@@ -242,15 +242,17 @@ Folders are marked with {foldername}
 
 --UNFINISHED--
 {island name}
-  level.whatever - Contains the island level data
+  level.dat - Contains the island level data
+  weapons.yml - YAML file containing weapon data
   shop_prices.yml - YAML file containing shop prices for shops
-  npc.dialogue
+  npc_dialogue.yml - YAML file containing npc dialogue
   events.yml
   {sublevels}
     {sublevelname}
-      level.whatever - Contains sublevel data
+      level.dat - Contains sublevel data
+      weapons.yml - Same as above
       shop_prices.yml - Same as above
-      npc.dialogue
+      npc_dialogue.yml - Same as above
       events.yml
 
 # Attributes #

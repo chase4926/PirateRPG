@@ -25,6 +25,7 @@ include EveryModule
 # Source files ---
 require 'engine.rb'
 require 'menu.rb'
+require 'world.rb'
 require 'battle.rb'
 require 'player.rb'
 require 'enemy.rb'
