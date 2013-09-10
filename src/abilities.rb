@@ -34,7 +34,11 @@ module Abilities
     def self.desc(player, enemy)
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player)}</c> damage."
+=======
+      return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
+>>>>>>> fedd90ec061591c89586299aadc9c0db89d36268
 =======
       return "Jumps on the enemy, \ndealing <c=ff4d4d>#{self.get_damage_amount(player, enemy)}</c> damage."
 >>>>>>> fedd90ec061591c89586299aadc9c0db89d36268
