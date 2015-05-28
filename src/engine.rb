@@ -26,9 +26,9 @@ end
 
 
 class Controller
-  def initialize(window)
+  def initialize(window, options={})
     @window = window
-    @phase = 0
+    @phase = options[:phase] ? options[:phase] : 0
     @menu = Menu.new(window)
     @world = World.new(window)
     @battle = Battle.new(window)
@@ -38,10 +38,12 @@ class Controller
     case @phase
       when 0
         return [@menu]
-      when 1
+      when 1 # World view (Walking around, etc.)
         return [@world]
-      when 2
+      when 2 # Battle screen
         return [@battle]
+      when 100 # Editor menu
+        return []
     end
   end
   
@@ -159,7 +161,11 @@ class GameWindow < Gosu::Window
     @relative_mouse_y = 0
     @window_width = params[:window_width]
     @window_height = params[:window_height]
-    @controller = Controller.new(self)
+    if params[:editor] then
+      @controller = Controller.new(self, :phase => 100)
+    else
+      @controller = Controller.new(self)
+    end
     @show_cursor = params[:show_cursor] == nil ? true : params[:show_cursor]
     @show_fps = params[:show_fps] == nil ? false : params[:show_fps]
   end # End GameWindow Initialize
