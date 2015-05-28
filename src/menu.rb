@@ -162,13 +162,13 @@ class Menu < ControllerObject
       draw_box('fullscreen_left_arrow')
       draw_box('fullscreen_right_arrow')
     end
-    #Click
+    #Easter Egg -- Up up down down left right left right b a enter -on the main menu
     if @list_tick > 0 then
       @list_tick += 1
       draw_square(@window, 639, 0, 2, 2, -300 + (@list_tick < 460 ? @list_tick : 460), 0xff000000)
-      Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 3)
+      Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 11)
       if @list_tick > 516 then
-        every(25) do
+        every(28) do
           @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
         end
         draw_square(@window, 0, 0, 10, 1280, 720, @click_color)
