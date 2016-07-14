@@ -334,6 +334,10 @@ class BoundingBoxManager
     @bounding_box_hash[id] = BoundingBox.new(x, y, width, height)
   end
   
+  def add_box(box, id)
+    @bounding_box_hash[id] = box
+  end
+  
   def remove_box(id)
     @bounding_box_hash.delete(id)
   end

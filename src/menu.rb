@@ -14,15 +14,20 @@ class Menu < ControllerObject
     @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @resolutions = get_resolution_list()
     update_resolution_index()
+    # Ship animation
+    @ship_manager = BoundingBoxManager.new()
+    @num_ships = 10
+    @num_ships.times() do |n|
+      @ship_manager.add_box(Ship_Animation.new(), n)
+    end
     # Easter egg below
     @list = [Gosu::Button::KbUp, Gosu::Button::KbUp, Gosu::Button::KbDown, Gosu::Button::KbDown,
              Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
              Gosu::Button::KbB, Gosu::Button::KbA, Gosu::Button::KbReturn]
     @list_index = 0
-    @click = Media::get_sound('songs/click.ogg')
+    @egg_music = Media::get_sound('songs/click.ogg')
     @list_tick = 0
-    @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
-    
+    @egg_overlay_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
     # Recording mode true = recording, false = playing
     @recording_mode = false
     if @recording_mode then
@@ -39,6 +44,10 @@ class Menu < ControllerObject
     if @current_boxes_under_mouse.include?('volume') and @window.button_down?(Gosu::Button::MsLeft) then
       # Modify volume
       Res::Vars['volume'] = ((((@window.relative_mouse_x - @menu_yml['options']['volume']['slider']['x']) / Media::get_image(@menu_yml['options']['volume']['slider']['background']).width()) * 100) / 5.0).round() * 5
+    end
+    # Ship animation
+    @num_ships.times() do |n|
+      @ship_manager[n].update()
     end
   end
   
@@ -139,8 +148,12 @@ class Menu < ControllerObject
         Media::get_graphic('64x64/ocean.png')[(Gosu::milliseconds / 75) % Media::get_graphic('64x64/ocean.png').size].draw(x*64, y*64, 1)
       end
     end
+    # Ship animation
+    @num_ships.times do |n|
+      @ship_manager[n].draw(2)
+    end
     # Title
-    Media::get_image(@menu_yml['title']['image']).draw(@menu_yml['title']['x'], @menu_yml['title']['y'], 1)
+    Media::get_image(@menu_yml['title']['image']).draw(@menu_yml['title']['x'], @menu_yml['title']['y'], 3)
     # New game button
     draw_box('new_game')
     # Load game button
@@ -188,9 +201,9 @@ class Menu < ControllerObject
       end
       if @list_tick > 516 then
         every(28) do
-          @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
+          @egg_overlay_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
         end
-        draw_square(@window, 0, 0, 10, 1280, 720, @click_color)
+        draw_square(@window, 0, 0, 10, 1280, 720, @egg_overlay_color)
       end
     end
   end
@@ -254,7 +267,10 @@ class Menu < ControllerObject
     
     if id == @list[@list_index] then
       if @list_index == (@list.count() - 1) then
-        @click.play()
+        @num_ships.times() do |n|
+          @ship_manager[n].go_fast()
+        end
+        @egg_music.play()
         @list_tick = 1
       else
         @list_index += 1
@@ -287,6 +303,43 @@ class Menu < ControllerObject
         end
       end
     end
+  end
+end
+
+
+class Ship_Animation < BoundingBox
+  def initialize()
+    @x = rand(1280)
+    @y = rand(720)
+    @image = Media::get_image('ship.png')
+    @width = @image.width
+    @height = @image.height
+    @extra = nil
+    @angle = rand(360)
+    @target = [rand(1280), rand(720)]
+    @speed = 1
+    @rot_speed = 1
+  end
+  
+  def go_fast()
+    # easter egg
+    @speed = 10
+    @rot_speed = 8
+  end
+  
+  def update()
+    # Rotate to the new target
+    @angle = angle_smoother(@angle, Gosu::angle(@x, @y, *@target), @rot_speed)
+    # Move to target
+    @x += Gosu::offset_x(@angle, @speed)
+    @y += Gosu::offset_y(@angle, @speed)
+    if Gosu::distance(@x, @y, *@target) < 50 then
+      @target = [rand(1280), rand(720)]
+    end
+  end
+  
+  def draw(z)
+    @image.draw_rot(@x, @y, z, @angle)
   end
 end
 

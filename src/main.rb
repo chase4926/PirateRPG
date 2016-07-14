@@ -6,7 +6,7 @@ PirateRPG
 
 
 Dir.chdir(File.dirname(__FILE__))
-$:.unshift(File.dirname(__FILE__))
+$:.unshift(File.expand_path('.'))
 $:.unshift(File.expand_path('../lib'))
 
 # System libraries ---

@@ -37,7 +37,7 @@ main:
     y: 350
 options:
   font:
-    name: Batang
+    name: ../content/fonts/ProzaLibre-Bold.ttf
     size: 46
   background:
     image: menu/options_back.png
