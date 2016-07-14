@@ -14,7 +14,7 @@ class Menu < ControllerObject
     @phase = 0 # 0 = Main menu, 1 = Load game, 2 = Options 
     @resolutions = get_resolution_list()
     update_resolution_index()
-    # REMOVE BELOW SOONISH
+    # Easter egg below
     @list = [Gosu::Button::KbUp, Gosu::Button::KbUp, Gosu::Button::KbDown, Gosu::Button::KbDown,
              Gosu::Button::KbLeft, Gosu::Button::KbRight, Gosu::Button::KbLeft, Gosu::Button::KbRight,
              Gosu::Button::KbB, Gosu::Button::KbA, Gosu::Button::KbReturn]
@@ -22,6 +22,16 @@ class Menu < ControllerObject
     @click = Media::get_sound('songs/click.ogg')
     @list_tick = 0
     @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
+    
+    # Recording mode true = recording, false = playing
+    @recording_mode = false
+    if @recording_mode then
+      @showtime_hash = {}
+    else
+      File.open('hash.yml', 'r') do |file|
+        @showtime_hash = YAML::load(file.read())
+      end
+    end
   end
   
   def update()
@@ -167,6 +177,15 @@ class Menu < ControllerObject
       @list_tick += 1
       draw_square(@window, 639, 0, 2, 2, -300 + (@list_tick < 460 ? @list_tick : 460), 0xff000000)
       Media::get_image('menu/ball.png').draw(490, -300 + (@list_tick < 460 ? @list_tick : 460), 11)
+      
+      if not @recording_mode then
+        if @showtime_hash[-@list_tick] then
+          Media::get_image('menu/spotlight.png').draw(0, 0, 10, 3, 3)
+        end
+        if @showtime_hash[@list_tick] then
+          Media::get_image('menu/spotlight.png').draw(1280, 0, 10, -3, 3)
+        end
+      end
       if @list_tick > 516 then
         every(28) do
           @click_color = Gosu::Color.argb(100, rand(255), rand(255), rand(255))
@@ -242,6 +261,31 @@ class Menu < ControllerObject
       end
     else
       @list_index = 0
+    end
+    
+    if @recording_mode then
+      if id == Gosu::KbLeft then
+        if @list_tick > 0 then
+          8.times() do |i|
+            @showtime_hash[-1 * (@list_tick + i)] = true
+          end
+        end
+      end
+      if id == Gosu::KbRight then
+        if @list_tick > 0 then
+          8.times() do |i|
+            @showtime_hash[@list_tick + i] = true
+          end
+        end
+      end
+      if id == Gosu::KbSpace then
+        if @list_tick > 0 then
+          puts "saving hash"
+          File.open('hash.yml', 'w+') do |file|
+            file.print(@showtime_hash.to_yaml())
+          end
+        end
+      end
     end
   end
 end

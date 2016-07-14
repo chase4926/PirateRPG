@@ -35,7 +35,9 @@ class World < ControllerObject
           @size[1].times() do |y|
             @size[0].times() do |x|
               if rand(5) == 0 then
-                Media::get_image("world/#{rand(2)+4}.png").draw(x*32, y*32, 0)
+                #Media::get_image("world/#{rand(2)+4}.png").draw(x*32, y*32, 0)
+                Media::get_image("world/trunk.png").draw(x*32, y*32, 0)
+                Media::get_image("world/leaves.png").draw(x*32, y*32, 0, 1, 1, Gosu::Color.new(255, rand(155)+100, rand(155)+100, 0))
               end
             end
           end
